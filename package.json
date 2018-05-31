@@ -1,0 +1,18 @@
+{
+  "name": "complexitydiscordbot",
+  "version": "1.0.0",
+  "description": "Custom Discord Bot for the Complexity guild of Thunderlord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "lint": "eslint ."
+  },
+  "author": "Michael Hughes",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "eslint": "^4.19.1",
+    "snekfetch": "^4.0.0"
+  }
+}
