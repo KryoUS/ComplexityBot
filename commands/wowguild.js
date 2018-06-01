@@ -1,15 +1,10 @@
-//Guild and Server names with spaces need to be handled!
-
-
-
-
 const Discord = require('discord.js');
 const snekfetch = require('snekfetch');
 const { wowAPIKey, warcraftLogsAPIKey } = require('../config.json');
 
 module.exports = {
-    name: 'guild',
-    aliases: ['guildinfo', 'clan', 'claninfo'],
+    name: 'wowguild',
+    aliases: ['wowguildinfo', 'wowclan', 'wowclaninfo'],
     description: `Displays embeded information about a World of Warcraft guild.`,
     args: true,
     usage: '<guildname> <realm> <region>',

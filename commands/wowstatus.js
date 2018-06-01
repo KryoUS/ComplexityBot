@@ -3,8 +3,8 @@ const snekfetch = require('snekfetch');
 const { wowAPIKey } = require('../config.json');
 
 module.exports = {
-    name: 'status',
-    aliases: ['realmstatus'],
+    name: 'wowstatus',
+    aliases: ['wowrealmstatus', 'wowserverstatus'],
     description: `Displays embeded information about a realm's status.`,
     args: true,
     usage: '<realm> <region>',

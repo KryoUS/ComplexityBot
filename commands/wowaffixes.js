@@ -2,8 +2,8 @@ const Discord = require('discord.js');
 const snekfetch = require('snekfetch');
 
 module.exports = {
-    name: 'affixes',
-    aliases: ['mythicaffixes', 'affix'],
+    name: 'wowaffixes',
+    aliases: ['wowmythicaffixes', 'wowaffix'],
     description: 'Displays embeded information about the current Mythic Dungeon affixes.',
     args: true,
     usage: '<region>',

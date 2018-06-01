@@ -3,8 +3,8 @@ const snekfetch = require('snekfetch');
 const { wowAPIKey } = require('../config.json');
 
 module.exports = {
-    name: 'char',
-    aliases: ['characterinfo', 'toon', 'tooninfo', 'charinfo'],
+    name: 'wowchar',
+    aliases: ['wowcharacterinfo', 'wowtoon', 'wowtooninfo', 'wowcharinfo', 'warcraftchar', 'warcrafttoon'],
     description: 'Displays embeded information about a World of Warcraft character.',
     args: true,
     usage: '<charname> <realm> <region>',
