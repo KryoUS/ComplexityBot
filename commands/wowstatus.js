@@ -31,7 +31,7 @@ module.exports = {
             }
 
             const charEmbed = new Discord.RichEmbed()
-                .setColor('#0099ff')
+                .setColor('#FFD700')
                 .setTitle(`__${realm.name}__`)
                 //.setURL(<url>)
                 .setAuthor(`Realm Status`, statusAuthorIcon)

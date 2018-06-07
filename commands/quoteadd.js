@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['quotesadd', 'guildquotesadd', 'guildquoteadd', 'memberquoteadd', 'memberquotesadd', 'memquoteadd', 'memquotesadd'],
     description: `Adds a quote to the Bot from the wonderful Complexity members.`,
     args: true,
-    usage: '<name> <quote>',
+    usage: '<name> <quote sentence with punctuation>',
     guildOnly: true,
     cooldown: 60,
     async execute(message, args) {
@@ -19,7 +19,7 @@ module.exports = {
             
             let argJoin = args.shift()
             argJoin = args.join(' ')
-            quoteQuote = argJoin
+            let quoteQuote = argJoin
 
             snekfetch.get(firebaseAPI).then(response => {
 
@@ -31,7 +31,7 @@ module.exports = {
                 snekfetch.put(firebaseAPIIndex).send( { name: quoteName, quote: quoteQuote } ).then(response => {
 
                     const charEmbed = new Discord.RichEmbed()
-                        .setColor('#0099ff')
+                        .setColor('#ffffff')
                         .setTitle(`__Quote Added__`)
                         //.setURL(<url>)
                         //.setAuthor(`Quote`, botAvatar)
@@ -48,7 +48,7 @@ module.exports = {
                     console.log(message.authoer.username, error);
 
                     const charEmbed = new Discord.RichEmbed()
-                        .setColor('#0099ff')
+                        .setColor('#ffffff')
                         .setTitle(`__Error__`)
                         //.setURL(<url>)
                         //.setAuthor(`Quote`, botAvatar)
@@ -67,7 +67,7 @@ module.exports = {
                 console.log(message.author.username, error);
                 
                 const charEmbed = new Discord.RichEmbed()
-                    .setColor('#0099ff')
+                    .setColor('#ffffff')
                     .setTitle(`__Error__`)
                     //.setURL(<url>)
                     //.setAuthor(`Quote`, botAvatar)

@@ -31,7 +31,7 @@ module.exports = {
             let affixesThreeLink = affixes.affix_details[2].wowhead_url
 
             const charEmbed = new Discord.RichEmbed()
-                .setColor('#0099ff')
+                .setColor('#FFD700')
                 .setTitle(`__Mythic+ Affixes__`)
                 //.setURL(<url>)
                 .setAuthor(`Powered by RaiderIO`, affixesAuthorIcon, affixesURL)

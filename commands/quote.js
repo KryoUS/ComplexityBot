@@ -22,7 +22,7 @@ module.exports = {
             let quoteQuote = quote[quoteIndex].quote
 
             const charEmbed = new Discord.RichEmbed()
-                .setColor('#0099ff')
+                .setColor('#ffffff')
                 .setTitle(`__Random Quote__`)
                 //.setURL(<url>)
                 //.setAuthor(`Quote`, botAvatar)
@@ -40,7 +40,7 @@ module.exports = {
             console.log(message.author.username, error);
 
             const charEmbed = new Discord.RichEmbed()
-                .setColor('#0099ff')
+                .setColor('#ffffff')
                 .setTitle(`__Error__`)
                 //.setURL(<url>)
                 //.setAuthor(`Quote`, botAvatar)

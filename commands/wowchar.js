@@ -14,7 +14,7 @@ module.exports = {
 
         let charRealmSpace = args[1].replace(/_/g, '%20');
         let charRealmHyphen = args[1].replace(/_/g, '-');
-        let charRegion = args[2];
+        let charRegion = args[2].toLowerCase();
 
         if (args.length >= 4) {
             return message.channel.send('The <realm> is incorrect!\nIf it contains spaces, use an underscore instead.\n**Example: **aerie_peak')
@@ -24,9 +24,9 @@ module.exports = {
             return message.channel.send('<region> is incorrect!\n**Valid Regions:** us | eu | kr | cn')
         }
 
-        if (charRegion === 'us') {
+        if (charRegion == 'us') {
             charArmoryRegion = 'en-us'
-        } else if (charRegion === 'eu') {
+        } else if (charRegion == 'eu') {
             charArmoryRegion = 'en-gb'
         }
 
@@ -126,7 +126,7 @@ module.exports = {
 
 
                 const charEmbed = new Discord.RichEmbed()
-                    .setColor('#0099ff')
+                    .setColor('#FFD700')
                     .setTitle(title)
                     //.setURL(url)
                     .setAuthor(author, authorIcon, url)

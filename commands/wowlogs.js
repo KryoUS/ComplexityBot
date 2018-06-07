@@ -47,7 +47,7 @@ module.exports = {
 
             if (logs.length === 0) {
                 const charEmbed = new Discord.RichEmbed()
-                    .setColor('#0099ff')
+                    .setColor('#FFD700')
                     .setTitle(`__Warcraft Logs__`)
                     //.setURL(<url>)
                     .setAuthor(`<${logsGuildDisplayName}> - ${logsRealmDisplayName} (${logsGuildRegionUpper})`, logsAuthorIcon)
@@ -69,7 +69,7 @@ module.exports = {
                 }
 
                 const charEmbed = new Discord.RichEmbed()
-                    .setColor('#0099ff')
+                    .setColor('#FFD700')
                     .setTitle(`__Warcraft Logs__`)
                     //.setURL(<url>)
                     .setAuthor(`<${logsGuildDisplayName}> - ${logsRealmDisplayName} (${logsGuildRegionUpper})`, logsAuthorIcon)
@@ -87,7 +87,7 @@ module.exports = {
             console.log(message.author.username, error);
 
             const charEmbed = new Discord.RichEmbed()
-                .setColor('#0099ff')
+                .setColor('#FFD700')
                 .setTitle(`${error.body.error}`)
                 //.setURL(<url>)
                 .setAuthor(`Warcraft Logs Error`, logsAuthorIcon)

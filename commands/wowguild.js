@@ -133,7 +133,7 @@ module.exports = {
                     }
 
                     const charEmbed = new Discord.RichEmbed()
-                        .setColor('#0099ff')
+                        .setColor('#FFD700')
                         //.setTitle(`<>`)
                         //.setURL(<url>)
                         .setAuthor(`<${guild.name}> - ${guild.realm} (${guildRegionUpper})`, guildAuthorIcon)
