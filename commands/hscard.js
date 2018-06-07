@@ -59,10 +59,10 @@ module.exports = {
                     //.setURL(<url>)
                     .setDescription(cardText)
                     //.setThumbnail(<thumbnail>)
+                    .setImage(cardImage)
                     .addField(`__Card Info__`, cardInfo, true)
                     .addField(`__Flavor Text__`, cardFlavorText, true)
                     .addField(`__External Sites__`, `[Hearthpwn](${cardURL})`, false)
-                    .setImage(cardImage)
                     .setTimestamp()
                     .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
