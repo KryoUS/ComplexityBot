@@ -6,6 +6,7 @@ module.exports = {
     name: 'quoteadd',
     aliases: ['quotesadd', 'guildquotesadd', 'guildquoteadd', 'memberquoteadd', 'memberquotesadd', 'memquoteadd', 'memquotesadd'],
     description: `Adds a quote to the Bot from the wonderful Complexity members.`,
+    category: `Guild`,
     args: true,
     usage: '<name> <quote sentence with punctuation>',
     guildOnly: true,

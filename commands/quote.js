@@ -6,6 +6,7 @@ module.exports = {
     name: 'quote',
     aliases: ['quotes', 'guildquotes', 'guildquote', 'memberquote', 'memberquotes', 'memquote', 'memquotes'],
     description: `Displays a random quote from the wonderful Complexity members.`,
+    category: `Guild`,
     args: false,
     usage: '',
     guildOnly: false,

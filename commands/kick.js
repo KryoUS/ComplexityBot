@@ -2,6 +2,7 @@ module.exports = {
     name: 'kick',
     aliases: ['boot', 'destroy'],
     description: 'Attempts to kick a member.',
+    category: `Discord`,
     args: true,
     usage: '@<user>',
     guildOnly: true,

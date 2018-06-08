@@ -1,20 +1,35 @@
 module.exports = {
     name: 'args',
     description: 'Information about the argument provided.',
+    category: `Bot`,
+    aliases: ['arguments', 'argument'],
+    usage: '<argument>',
     args: false,
     execute(message, args) {
-        if (args[0] === 'user') {
-            return message.channel.send(`<user> will need to be replaced with the Discord User's name.`);
-        } else if (args[0] === 'charname') {
-            return message.channel.send(`<charname> will need to be replaced with the Character's name.`)
-        } else if (args[0] === 'realm') {
-            return message.channel.send(`<realm> will need to be replaced with the realm or server name.`)
-        } else if (args[0] === 'region') {
-            return message.channel.send(`<region> will need to be replaced with the region.\n**Example:** us, eu, kr, cn`)
-        } else {
-            return message.channel.send(`Current arguments are as follows...\nuser\ncharname\nrealm\nregion`)
+        const { commands } = message.client;
+        const data = [];
+
+        if (!args.length) {
+            data.push('Here\'s a list of all command arguments:');
+            data.push(commands.map(command => command.usage).join(`\n`));
+            data.push(`\nYou can send \`${prefix}args <argument>\` to get more info on a specific argument!`);
+        }
+        else {
+            if (!commands.has(args[0])) {
+                return message.reply('that\'s not a valid argument!');
+            }
+            
+            const command = commands.get(args[1]);
+            
+            data.push(`**Available Arguments:** ${command.usage}`);
         }
 
-        message.channel.send(`Arguments: ${args}\nArguments length: ${args.length}`);
+        message.author.send(data, { split: true })
+        .then(() => {
+            if (message.channel.type !== 'dm') {
+                message.channel.send('I\'ve sent you a DM with all my arguments!');
+            }
+        })
+        .catch(() => message.reply('it seems like I can\'t DM you!'));
     },
 };

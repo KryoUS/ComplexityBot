@@ -6,6 +6,7 @@ module.exports = {
     name: 'wowstatus',
     aliases: ['wowrealmstatus', 'wowserverstatus'],
     description: `Displays embeded information about a realm's status.`,
+    category: `World of Warcraft`,
     args: true,
     usage: '<realm> <region>',
     guildOnly: false,

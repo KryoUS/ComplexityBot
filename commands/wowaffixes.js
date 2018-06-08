@@ -5,6 +5,7 @@ module.exports = {
     name: 'wowaffixes',
     aliases: ['wowmythicaffixes', 'wowaffix'],
     description: 'Displays embeded information about the current Mythic Dungeon affixes.',
+    category: `World of Warcraft`,
     args: true,
     usage: '<region>',
     guildOnly: false,

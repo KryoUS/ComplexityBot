@@ -6,6 +6,7 @@ module.exports = {
     name: 'wowchar',
     aliases: ['wowcharacterinfo', 'wowtoon', 'wowtooninfo', 'wowcharinfo', 'warcraftchar', 'warcrafttoon'],
     description: 'Displays embeded information about a World of Warcraft character.',
+    category: `World of Warcraft`,
     args: true,
     usage: '<charname> <realm> <region>',
     guildOnly: false,

@@ -6,6 +6,7 @@ module.exports = {
     name: 'wowguild',
     aliases: ['wowguildinfo', 'wowclan', 'wowclaninfo'],
     description: `Displays embeded information about a World of Warcraft guild.`,
+    category: `World of Warcraft`,
     args: true,
     usage: '<guildname> <realm> <region>',
     guildOnly: false,

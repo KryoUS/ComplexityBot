@@ -1,3 +1,5 @@
+//Array Sort with custom object ordering
+
 const Discord = require('discord.js');
 const snekfetch = require('snekfetch');
 const { hearthstoneKey } = require('../config.json');
@@ -6,6 +8,7 @@ module.exports = {
     name: 'hscard',
     aliases: ['cardsearch', 'hscardsearch', 'hscards', 'hearthstone', 'card'],
     description: `Displays the closest matching Hearthstone card.`,
+    category: `Hearthstone`,
     args: true,
     usage: '<card name>',
     guildOnly: false,
@@ -19,58 +22,75 @@ module.exports = {
             const hearthstoneIcon = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2FhearthstoneLogo.png?alt=media&token=e13cbb22-44b4-40ba-8414-61de0dfec79d`
             
             snekfetch.get(hearthstoneAPI, {headers: {'X-Mashape-Key': hearthstoneKey}}).then(response => {
-                let card = response.body[response.body.length-1]
+                console.log(response.body)
+                let responseLength = response.body.length
                 let cardInfo = ''
 
-                capitalize = (letter) => {
-                    return letter[0].toUpperCase() + letter.slice(1);
-                }
-    
-                getCardInfo = (obj) => {
-                    for (key in obj) {
-                        if (!['img', 'imgGold', 'text', 'flavor', 'name', 'cardId', 'dbfId', 'locale', 'mechanics', 'collectible'].includes(key)) {
-                            let capKey = key.replace(/([A-Z])/g, ' $1')
-                            capKey = capitalize(capKey)
-                            cardInfo+=`**${capKey}:** ${obj[key]}\n`
+                msg.delete().then(rep => {
+                    message.reply(`${responseLength} card(s) found! _(Only a maximum of **3** cards will be shown.)_`);
+                    
+                    if (responseLength > 3) {
+                        responseLength =  3
+                    }
+
+                    capitalize = (letter) => {
+                        return letter[0].toUpperCase() + letter.slice(1);
+                    }
+        
+                    getCardInfo = (obj) => {
+                        for (key in obj) {
+                            if (!['img', 'imgGold', 'text', 'flavor', 'name', 'cardId', 'dbfId', 'locale', 'mechanics', 'collectible'].includes(key)) {
+                                let capKey = key.replace(/([A-Z])/g, ' $1')
+                                capKey = capitalize(capKey)
+                                cardInfo+=`**${capKey}:** ${obj[key]}\n`
+                            }
                         }
                     }
-                }
 
-                removeFormatting = (x) => {
-                    return x.replace(/\\n/g, " ").replace(/_/g, " ").replace(/<i>/g, '').replace(/<b>/g, '').replace(/<\/i>/g, '').replace(/<\/b>/g, '').replace(/[$|[x\]]/g, '');
-                }
+                    removeFormatting = (x) => {
+                        return x.replace(/\\n/g, " ").replace(/_/g, " ").replace(/<i>/g, '').replace(/<b>/g, '').replace(/<\/i>/g, '').replace(/<\/b>/g, '').replace(/[$|[x\]]/g, '');
+                    }
 
-                getCardInfo(card)
+                    //Loop over card results array
+                    for (i = 0; i<responseLength; i++) {                        
+                        let card = response.body[i]
+                        cardInfo = ''
 
-                let cardName = card.name
-                let cardFlavorText = '_None._'
-                if (card.flavor) {
-                    cardFlavorText = removeFormatting(card.flavor)
-                    cardFlavorText = `_${cardFlavorText}_`
-                }
-                let cardURL = `https://www.hearthpwn.com/cards?filter-name=${hearthPwnSearch}`
-                let cardImage = card.img
-                let cardText = removeFormatting(card.text)
+                        getCardInfo(card)
 
-                const charEmbed = new Discord.RichEmbed()
-                    .setColor('#0099ff')
-                    .setAuthor(`Hearthstone Card Search`, hearthstoneIcon)
-                    .setTitle(`__${cardName}__`)
-                    //.setURL(<url>)
-                    .setDescription(cardText)
-                    //.setThumbnail(<thumbnail>)
-                    .setImage(cardImage)
-                    .addField(`__Card Info__`, cardInfo, true)
-                    .addField(`__Flavor Text__`, cardFlavorText, true)
-                    .addField(`__External Sites__`, `[Hearthpwn](${cardURL})`, false)
-                    .setTimestamp()
-                    .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
+                        let cardName = card.name
+                        let cardText = '_None._'
+                        let cardFlavorText = '_None._'
+                        if (card.flavor) {
+                            cardFlavorText = removeFormatting(card.flavor)
+                            cardFlavorText = `_${cardFlavorText}_`
+                        }
+                        let cardURL = `https://www.hearthpwn.com/cards?filter-name=${hearthPwnSearch}`
+                        let cardImage = card.img
+                        if (card.text) {
+                            cardText = removeFormatting(card.text)
+                        }
 
-                msg.delete().then(rep => {
-                    message.reply({ embed: charEmbed });
+                        const charEmbed = new Discord.RichEmbed()
+                            .setColor('#0099ff')
+                            .setAuthor(`Hearthstone Card Search`, hearthstoneIcon)
+                            .setTitle(`__${cardName}__`)
+                            //.setURL(<url>)
+                            .setDescription(cardText)
+                            //.setThumbnail(<thumbnail>)
+                            .setImage(cardImage)
+                            .addField(`__Card Info__`, cardInfo, true)
+                            .addField(`__Flavor Text__`, cardFlavorText, true)
+                            .addField(`__External Sites__`, `[Hearthpwn](${cardURL})`, false)
+                            .setTimestamp()
+                            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
+
+                        message.channel.send({ embed: charEmbed });
+                    }
                 }).catch(error => {
                     console.log(error)
                 })
+
 
             }).catch(error => {
                 console.log(message.author.username, error);

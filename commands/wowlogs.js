@@ -6,6 +6,7 @@ module.exports = {
     name: 'wowlogs',
     aliases: ['warcraftlogs'],
     description: `Displays the last six logging sessions from Warcraft Logs for the provided guild.`,
+    category: `World of Warcraft`,
     args: true,
     usage: '<guildname> <realm> <region>',
     guildOnly: false,
