@@ -8,7 +8,7 @@ module.exports = {
     description: `Displays embeded information about a realm's status.`,
     category: `World of Warcraft`,
     args: true,
-    usage: '<realm> <region>',
+    usage: '<realm_name> <region>',
     guildOnly: false,
     cooldown: 5,
     async execute(message, args) {

@@ -8,7 +8,6 @@ module.exports = {
     description: `Displays a random quote from the wonderful Complexity members.`,
     category: `Guild`,
     args: false,
-    usage: '',
     guildOnly: false,
     cooldown: 5,
     async execute(message, args) {

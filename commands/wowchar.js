@@ -8,7 +8,7 @@ module.exports = {
     description: 'Displays embeded information about a World of Warcraft character.',
     category: `World of Warcraft`,
     args: true,
-    usage: '<charname> <realm> <region>',
+    usage: '<charname> <realm_name> <region>',
     guildOnly: false,
     cooldown: 10,
     async execute(message, args) {

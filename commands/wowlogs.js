@@ -8,7 +8,7 @@ module.exports = {
     description: `Displays the last six logging sessions from Warcraft Logs for the provided guild.`,
     category: `World of Warcraft`,
     args: true,
-    usage: '<guildname> <realm> <region>',
+    usage: '<guild_name> <realm_name> <region>',
     guildOnly: false,
     cooldown: 5,
     async execute(message, args) {

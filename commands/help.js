@@ -5,15 +5,16 @@ module.exports = {
     description: 'List all of my commands or info about a specific command.',
     category: `Bot`,
     aliases: ['commands'],
-    usage: '[command name]',
+    usage: '<commandname>',
     cooldown: 5,
     execute(message, args) {
         const { commands } = message.client;
         const data = [];
-
         if (!args.length) {
             data.push('Here\'s a list of all my commands:');
-            data.push(commands.map(command => command.name).join(` - ${command.description}\n`));
+            data.push(commands.map(command => {
+                return `__**${command.name}:**__ ${command.description}`
+            }).join(`\n`));
             data.push(`\nYou can send \`${prefix}help [command name]\` to get more info on a specific command!`);
         }
         else {
@@ -23,7 +24,7 @@ module.exports = {
             
             const command = commands.get(args[0]);
             
-            data.push(`**Name:** ${command.name}`);
+            data.push(`Here is more information about the __**${prefix}${command.name}**__ command.\n`);
             
             if (command.description) data.push(`**Description:** ${command.description}`);
             if (command.category) data.push(`**Category:** ${command.category}`);
@@ -36,7 +37,7 @@ module.exports = {
         message.author.send(data, { split: true })
         .then(() => {
             if (message.channel.type !== 'dm') {
-                message.channel.send('I\'ve sent you a DM with all my commands!');
+                message.reply('I\'ve sent you a DM with all my commands!');
             }
         })
         .catch(() => message.reply('it seems like I can\'t DM you!'));

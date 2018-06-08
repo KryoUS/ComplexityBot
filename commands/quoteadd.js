@@ -8,7 +8,7 @@ module.exports = {
     description: `Adds a quote to the Bot from the wonderful Complexity members.`,
     category: `Guild`,
     args: true,
-    usage: '<name> <quote sentence with punctuation>',
+    usage: '<name> <quote sentence with punctuation(can contain spaces)>',
     guildOnly: true,
     cooldown: 60,
     async execute(message, args) {

@@ -1,5 +1,3 @@
-//Array Sort with custom object ordering
-
 const Discord = require('discord.js');
 const snekfetch = require('snekfetch');
 const { hearthstoneKey } = require('../config.json');
@@ -10,7 +8,7 @@ module.exports = {
     description: `Displays the closest matching Hearthstone card.`,
     category: `Hearthstone`,
     args: true,
-    usage: '<card name>',
+    usage: '<card name(this can contain spaces)>',
     guildOnly: false,
     cooldown: 5,
     async execute(message, args) {
@@ -22,9 +20,14 @@ module.exports = {
             const hearthstoneIcon = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2FhearthstoneLogo.png?alt=media&token=e13cbb22-44b4-40ba-8414-61de0dfec79d`
             
             snekfetch.get(hearthstoneAPI, {headers: {'X-Mashape-Key': hearthstoneKey}}).then(response => {
-                console.log(response.body)
+                const sortOrder = ['Hero', 'Hero Power', 'Weapon', 'Minion', 'Spell', 'Enchantment']
                 let responseLength = response.body.length
                 let cardInfo = ''
+                let resArray = response.body
+
+                resArray.sort((a, b) => {
+                    return sortOrder.indexOf(a.type) - sortOrder.indexOf(b.type)
+                })
 
                 msg.delete().then(rep => {
                     message.reply(`${responseLength} card(s) found! _(Only a maximum of **3** cards will be shown.)_`);
@@ -48,12 +51,12 @@ module.exports = {
                     }
 
                     removeFormatting = (x) => {
-                        return x.replace(/\\n/g, " ").replace(/_/g, " ").replace(/<i>/g, '').replace(/<b>/g, '').replace(/<\/i>/g, '').replace(/<\/b>/g, '').replace(/[$|[x\]]/g, '');
+                        return x.replace(/\\n/g, " ").replace(/_/g, " ").replace(/<i>/g, '').replace(/<b>/g, '').replace(/<\/i>/g, '').replace(/<\/b>/g, '').replace(/$/g, '').replace(/\[x\]/g, '');
                     }
 
                     //Loop over card results array
                     for (i = 0; i<responseLength; i++) {                        
-                        let card = response.body[i]
+                        let card = resArray[i]
                         cardInfo = ''
 
                         getCardInfo(card)
@@ -65,8 +68,12 @@ module.exports = {
                             cardFlavorText = removeFormatting(card.flavor)
                             cardFlavorText = `_${cardFlavorText}_`
                         }
+                        let hearthPwnSearch = cardName.replace(/\s/g, '+')
                         let cardURL = `https://www.hearthpwn.com/cards?filter-name=${hearthPwnSearch}`
                         let cardImage = card.img
+                        if (card.imgGold) {
+                            cardImage = card.imgGold
+                        }
                         if (card.text) {
                             cardText = removeFormatting(card.text)
                         }
