@@ -71,7 +71,7 @@ module.exports = {
 
                 const charEmbed = new Discord.RichEmbed()
                     .setColor('#FFD700')
-                    .setTitle(`__Warcraft Logs__`)
+                    .setTitle(`Warcraft Logs`)
                     //.setURL(<url>)
                     .setAuthor(`<${logsGuildDisplayName}> - ${logsRealmDisplayName} (${logsGuildRegionUpper})`, logsAuthorIcon)
                     .setDescription(`[${makeDate(logsArray[5].start)} - ${logsArray[5].title}](https://www.warcraftlogs.com/reports/${logsArray[5].id})\n[${makeDate(logsArray[4].start)} - ${logsArray[4].title}](https://www.warcraftlogs.com/reports/${logsArray[4].id})\n[${makeDate(logsArray[3].start)} - ${logsArray[3].title}](https://www.warcraftlogs.com/reports/${logsArray[3].id})\n[${makeDate(logsArray[2].start)} - ${logsArray[2].title}](https://www.warcraftlogs.com/reports/${logsArray[2].id})\n[${makeDate(logsArray[1].start)} - ${logsArray[1].title}](https://www.warcraftlogs.com/reports/${logsArray[1].id})\n[${makeDate(logsArray[0].start)} - ${logsArray[0].title}](https://www.warcraftlogs.com/reports/${logsArray[0].id})`)

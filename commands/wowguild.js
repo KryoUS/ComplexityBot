@@ -135,9 +135,9 @@ module.exports = {
 
                     const charEmbed = new Discord.RichEmbed()
                         .setColor('#FFD700')
-                        //.setTitle(`<>`)
+                        .setTitle(`<${guild.name}> - ${guild.realm} (${guildRegionUpper})`)
                         //.setURL(<url>)
-                        .setAuthor(`<${guild.name}> - ${guild.realm} (${guildRegionUpper})`, guildAuthorIcon)
+                        .setAuthor(`World of Warcraft Guild Search`, guildAuthorIcon)
                         //.setDescription(`<Desc>`)
                         .setThumbnail(guildFactionThumbnail)
                         .addField(`__Guild Master__`, `[${guildLeaderName}](https://worldofwarcraft.com/${guildArmoryRegion}/character/${guildLeaderRealm}/${guildLeaderName})`, true)

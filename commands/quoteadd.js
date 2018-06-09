@@ -33,7 +33,7 @@ module.exports = {
 
                     const charEmbed = new Discord.RichEmbed()
                         .setColor('#ffffff')
-                        .setTitle(`__Quote Added__`)
+                        .setTitle(`Quote Added`)
                         //.setURL(<url>)
                         //.setAuthor(`Quote`, botAvatar)
                         .setDescription(`_${quoteQuote} - ${quoteName}_ `)
@@ -50,7 +50,7 @@ module.exports = {
 
                     const charEmbed = new Discord.RichEmbed()
                         .setColor('#ffffff')
-                        .setTitle(`__Error__`)
+                        .setTitle(`Error`)
                         //.setURL(<url>)
                         //.setAuthor(`Quote`, botAvatar)
                         .setDescription(`Unable to add a quote at this time, please try again later.`)
@@ -69,7 +69,7 @@ module.exports = {
                 
                 const charEmbed = new Discord.RichEmbed()
                     .setColor('#ffffff')
-                    .setTitle(`__Error__`)
+                    .setTitle(`Error`)
                     //.setURL(<url>)
                     //.setAuthor(`Quote`, botAvatar)
                     .setDescription(`Unable to add a quote at this time, please try again later.`)

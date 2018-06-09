@@ -23,7 +23,7 @@ module.exports = {
 
             const charEmbed = new Discord.RichEmbed()
                 .setColor('#ffffff')
-                .setTitle(`__Random Quote__`)
+                .setTitle(`Random Quote`)
                 //.setURL(<url>)
                 //.setAuthor(`Quote`, botAvatar)
                 .setDescription(`_${quoteQuote} - ${quoteName}_ `)
@@ -41,7 +41,7 @@ module.exports = {
 
             const charEmbed = new Discord.RichEmbed()
                 .setColor('#ffffff')
-                .setTitle(`__Error__`)
+                .setTitle(`Error`)
                 //.setURL(<url>)
                 //.setAuthor(`Quote`, botAvatar)
                 .setDescription(`Unable to retrieve a random quote at this time, please try again later.`)

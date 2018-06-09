@@ -81,7 +81,7 @@ module.exports = {
                         const charEmbed = new Discord.RichEmbed()
                             .setColor('#0099ff')
                             .setAuthor(`Hearthstone Card Search`, hearthstoneIcon)
-                            .setTitle(`__${cardName}__`)
+                            .setTitle(`${cardName}`)
                             //.setURL(<url>)
                             .setDescription(cardText)
                             //.setThumbnail(<thumbnail>)

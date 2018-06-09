@@ -33,7 +33,7 @@ module.exports = {
 
             const charEmbed = new Discord.RichEmbed()
                 .setColor('#FFD700')
-                .setTitle(`__Mythic+ Affixes__`)
+                .setTitle(`Mythic+ Affixes`)
                 //.setURL(<url>)
                 .setAuthor(`Powered by RaiderIO`, affixesAuthorIcon, affixesURL)
                 .setDescription(`This Week's Mythic+ Affixes.`)
