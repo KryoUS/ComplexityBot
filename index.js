@@ -10,6 +10,8 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
 const cooldowns = new Discord.Collection();
 
+const botAvatar = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fvigilant-quoram_profile.jpg?alt=media&token=5326e772-2e42-4d78-af8a-0fdd0d08c2d0`
+
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
 
@@ -20,7 +22,16 @@ for (const file of commandFiles) {
 
 //Log to the console that the bot is ready
 client.on('ready', () => {
+    // Send the message to a designated channel on a server:
+    const channel = client.channels.find('name', 'general');
+    // Do nothing if the channel wasn't found on this server
+    if (!channel) return;
     console.log('Ready!');
+    const charEmbed = new Discord.RichEmbed()
+        .setDescription(`_Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving you. Goodie._`)
+        .setThumbnail(botAvatar)
+
+    channel.send({ embed: charEmbed });
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -29,7 +40,11 @@ client.on('guildMemberAdd', (member) => {
     // Do nothing if the channel wasn't found on this server
     if (!channel) return;
     // Send the message, mentioning the member
-    channel.send(`I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}`);
+    const charEmbed = new Discord.RichEmbed()
+        .setDescription(`_I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}._`)
+        .setThumbnail(botAvatar)
+
+    channel.send({ embed: charEmbed });
     member.send("Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all.")
 });
 
