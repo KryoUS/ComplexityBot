@@ -22,11 +22,11 @@ for (const file of commandFiles) {
 
 //Log to the console that the bot is ready
 client.on('ready', () => {
+    console.log('Ready!');
     // Send the message to a designated channel on a server:
     const channel = client.channels.find('name', 'general');
     // Do nothing if the channel wasn't found on this server
     if (!channel) return;
-    console.log('Ready!');
     const charEmbed = new Discord.RichEmbed()
         .setDescription(`_Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving you. Goodie._`)
         .setThumbnail(botAvatar)
