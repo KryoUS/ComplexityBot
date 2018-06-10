@@ -3,12 +3,12 @@ const Discord = require('discord.js');
 module.exports = {
     name: 'everyone',
     aliases: ['everybody', 'here'],
-    description: `Returns random embedded image.`,
+    description: `Returns random embedded image for @everyone abusers.`,
     category: `Guild`,
     args: false,
     usage: '',
     guildOnly: true,
-    cooldown: 10,
+    cooldown: 30,
     async execute(message, args) {
 
         const everyoneArray = [
