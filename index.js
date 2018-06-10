@@ -24,14 +24,16 @@ for (const file of commandFiles) {
 client.on('ready', () => {
     console.log('Ready!');
     // Send the message to a designated channel on a server:
+    /*
     const channel = client.channels.find('name', 'general');
     // Do nothing if the channel wasn't found on this server
     if (!channel) return;
     const charEmbed = new Discord.RichEmbed()
-        .setDescription(`_Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving you. Goodie._`)
+        .setDescription(`_"Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving all of you. Oh goodie."_`)
         .setThumbnail(botAvatar)
 
     channel.send({ embed: charEmbed });
+    */
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -41,7 +43,7 @@ client.on('guildMemberAdd', (member) => {
     if (!channel) return;
     // Send the message, mentioning the member
     const charEmbed = new Discord.RichEmbed()
-        .setDescription(`_I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}._`)
+        .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
         .setThumbnail(botAvatar)
 
     channel.send({ embed: charEmbed });
