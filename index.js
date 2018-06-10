@@ -41,13 +41,17 @@ client.on('guildMemberAdd', (member) => {
     const channel = member.guild.channels.find('name', 'general');
     // Do nothing if the channel wasn't found on this server
     if (!channel) return;
-    // Send the message, mentioning the member
+    // Send a message to Discord channel "general", mentioning the member
     const charEmbed = new Discord.RichEmbed()
         .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
         .setThumbnail(botAvatar)
-
     channel.send({ embed: charEmbed });
-    member.send("Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all.")
+
+    // Send a whisper to the member, encouraging using the !help command
+    const memWhisperEmbed = new Discord.RichEmbed()
+        .setDescription(`_"Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all."_`)
+        .setThumbnail(botAvatar)
+    member.send({ embed: memWhisperEmbed });
 });
 
 client.on('message', message => {
@@ -65,22 +69,50 @@ client.on('message', message => {
         || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
         //If no command or alias, bail?
-        if (!command) return;
+        if (!command) {
+            const errorEmbed = new Discord.RichEmbed()
+                .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
+                .setThumbnail(botAvatar)
+            return message.channel.send({ embed: errorEmbed });
+        }
 
     //Stop commands that are guildOnly and are DMed to the bot
     if (command.guildOnly && message.channel.type !== 'text') {
-        return message.reply("This might be a difficult concept, however I cannot accept that command through Direct Messaging.");
+        const dMDeniedEmbed = new Discord.RichEmbed()
+            .setDescription(`_"This might be a difficult concept, however I cannot accept that command through Direct Messaging."_`)
+            .setThumbnail(botAvatar)
+        return message.reply({ embed: dMDeniedEmbed });
     }
 
     //Explain arguments if the command has one and one wasn't provided
     if (command.args && !args.length) {
-        let reply = `You didn't provide any arguments, ${message.author}!`;
+
+        let argsMissingEmbed = new Discord.RichEmbed()
+            //.setColor('#ff1000')
+            //.setAuthor(`Current Weather`, weatherIcon)
+            .setTitle(`Usage Error`)
+            //.setURL(<url>)
+            .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
+            .setThumbnail(botAvatar)
+            //.setImage(<image>)
+            //.setTimestamp()
+            //.setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
         if (command.usage) {
-            reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+            let argsMissingEmbed = new Discord.RichEmbed()
+                //.setColor('#ff1000')
+                //.setAuthor(`Current Weather`, weatherIcon)
+                .setTitle(`Usage Error`)
+                //.setURL(<url>)
+                .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
+                .setThumbnail(botAvatar)
+                .addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
+                //.setImage(<image>)
+                //.setTimestamp()
+                //.setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
         }
 
-        return message.channel.send(reply);
+        return message.channel.send({ embed: argsMissingEmbed });
     }
 
     //Check for cooldown on the command
@@ -106,7 +138,14 @@ client.on('message', message => {
         //Finally check for expiration
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
-            return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+
+            const cooldownEmbed = new Discord.RichEmbed()
+                .setDescription(`_"I am extremely busy and do not have the resources to process your request ${message.author}."_`)
+                .setThumbnail(botAvatar)
+                .addBlankField()
+                .addField(`Cooldown Remaining`, `Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${prefix}${command.name}\` command.`, false)
+
+            return message.channel.send({ embed: cooldownEmbed });
         }
 
         //Remove timeout
@@ -121,7 +160,10 @@ client.on('message', message => {
     //Error if the command doesn't exist
     catch (error) {
         console.error(error);
-        message.reply(`I wish I could believe you didn't know that ${prefix + message} wasn't a command but knowing you it was likely a typo.`);
+        const errorEmbed = new Discord.RichEmbed()
+            .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
+            .setThumbnail(botAvatar)
+        message.channel.send({ embed: errorEmbed });
     }
 });
 
