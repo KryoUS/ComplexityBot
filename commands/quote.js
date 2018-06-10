@@ -13,6 +13,8 @@ module.exports = {
     async execute(message, args) {
 
         const firebaseAPI = `https://complexitywebsite-bdcf7.firebaseio.com/guildquotes.json?auth=${firebaseKey}`
+        const quoteThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fquotes.png?alt=media&token=357efdeb-b65d-4544-8e9d-14d66c5fc5b6`
+        const errorThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Ferror.png?alt=media&token=19beee91-6acd-4949-87da-dc2949e68fa1`
         
         snekfetch.get(firebaseAPI).then(response => {
 
@@ -28,7 +30,7 @@ module.exports = {
                 //.setAuthor(`Quote`, botAvatar)
                 .setDescription(`_${quoteQuote} - ${quoteName}_ `)
                 .addBlankField()
-                //.setThumbnail()
+                .setThumbnail(quoteThumb)
                 //.addField(`test`, `test`, false)
                 //.setImage(<imageURL>)
                 .setTimestamp()
@@ -46,7 +48,7 @@ module.exports = {
                 //.setAuthor(`Quote`, botAvatar)
                 .setDescription(`Unable to retrieve a random quote at this time, please try again later.`)
                 .addBlankField()
-                //.setThumbnail()
+                .setThumbnail(errorThumb)
                 //.addField(`test`, `test`, false)
                 //.setImage(<imageURL>)
                 .setTimestamp()
