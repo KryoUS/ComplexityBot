@@ -3,13 +3,13 @@ const Discord = require('discord.js');
 module.exports = {
     name: 'everyone',
     aliases: ['everybody', 'here'],
-    description: `Returns random embedded image for @everyone abusers.`,
+    description: `Returns a random image for @everyone abusers.`,
     category: `Guild`,
     args: false,
     usage: '',
     guildOnly: true,
     cooldown: 30,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         const everyoneArray = [
             'https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Feveryone%2Fangrydognoises.gif?alt=media&token=36fc1e32-4654-45d3-8f5e-e215ffb61cc9',

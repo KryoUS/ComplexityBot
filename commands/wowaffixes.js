@@ -10,7 +10,7 @@ module.exports = {
     usage: '<region>',
     guildOnly: false,
     cooldown: 10,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         //Firebase thumbnails
         const affixesAuthorIcon = 'https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Farmoryicon.png?alt=media&token=10abb5be-3322-4546-9eba-ffed91f92688'
@@ -19,7 +19,7 @@ module.exports = {
         //Ensure the region is defined and allowed
         //TODO: This isn't working and we're hitting the API needlessly
         let region = args[0];
-        if (!region == 'us' || !region == 'eu' || !region == 'kr' || !region == 'cn' || !region == 'tw') {
+        if (region != 'us' && region != 'eu' && region != 'kr' && region != 'cn' && region != 'tw') {
 
             //Create Error Embed
             const errorEmbed = new Discord.RichEmbed()

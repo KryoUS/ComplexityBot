@@ -11,7 +11,7 @@ module.exports = {
     usage: '<city name> or <city name, country code> or <zipcode> or <+/-lat +/-lon> (Spaces are allowed for <city name> and <+/-lat +/-lon>)',
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         const regex = new RegExp("[0-9]+")
         const regexLatLon = new RegExp(/\./g)

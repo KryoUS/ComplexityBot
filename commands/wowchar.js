@@ -11,7 +11,7 @@ module.exports = {
     usage: '<charname> <realm_name> <region>',
     guildOnly: false,
     cooldown: 10,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         let charRealmSpace = args[1].replace(/_/g, '%20');
         let charRealmHyphen = args[1].replace(/_/g, '-');

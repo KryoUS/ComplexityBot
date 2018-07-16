@@ -11,7 +11,7 @@ module.exports = {
     usage: '<guild_name> <realm_name> <region>',
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
         
         //Manipulate arguments for various locales, APIs, and external links.
         let guildNameAPI = args[0].replace(/_/g, '%20');

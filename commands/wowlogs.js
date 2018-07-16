@@ -11,7 +11,7 @@ module.exports = {
     usage: '<guild_name> <realm_name> <region>',
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
         
         let logsGuildSpace = args[0].replace(/_/g, '%20');
         let logsRealmHyphen = args[1].replace(/_/g, '-');

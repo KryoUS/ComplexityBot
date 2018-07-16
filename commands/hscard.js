@@ -11,7 +11,7 @@ module.exports = {
     usage: '<card name(this can contain spaces)>',
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
         message.reply('Fetching card data...').then(msg => {
             let searchText = args.join(' ')
             let hearthPwnSearch = args.join('+')

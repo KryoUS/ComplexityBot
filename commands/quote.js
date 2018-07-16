@@ -10,7 +10,7 @@ module.exports = {
     args: false,
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         const firebaseAPI = `https://complexitywebsite-bdcf7.firebaseio.com/guildquotes.json?auth=${firebaseKey}`
         const quoteThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fquotes.png?alt=media&token=357efdeb-b65d-4544-8e9d-14d66c5fc5b6`

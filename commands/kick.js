@@ -7,7 +7,7 @@ module.exports = {
     usage: '@<user>',
     guildOnly: true,
     cooldown: 5,
-    execute(message, args) {
+    execute(message, args, botAvatar) {
         // grab the "first" mentioned user from the message
         // this will return a `User` object, just like `message.author`
         const taggedUser = message.mentions.users.first();

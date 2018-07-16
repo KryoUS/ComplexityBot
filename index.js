@@ -10,7 +10,7 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
 const cooldowns = new Discord.Collection();
 
-const botAvatar = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fvigilant-quoram_profile.jpg?alt=media&token=5326e772-2e42-4d78-af8a-0fdd0d08c2d0`
+// const botAvatar = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fvigilant-quoram_profile.jpg?alt=media&token=5326e772-2e42-4d78-af8a-0fdd0d08c2d0`
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
@@ -22,6 +22,9 @@ for (const file of commandFiles) {
 
 //Log to the console that the bot is ready
 client.on('ready', () => {
+
+    const botAvatar = client.user.avatarURL;
+
     console.log('Ready!');
     // Send the message to a designated channel on a server:
     /*
@@ -31,12 +34,16 @@ client.on('ready', () => {
     const charEmbed = new Discord.RichEmbed()
         .setDescription(`_"Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving all of you. Oh goodie."_`)
         .setThumbnail(botAvatar)
+        .setImage(message.author.avatarURL)
 
     channel.send({ embed: charEmbed });
     */
 });
 
 client.on('guildMemberAdd', (member) => {
+
+    const botAvatar = client.user.avatarURL;
+
     // Send the message to a designated channel on a server:
     const channel = member.guild.channels.find('name', 'general');
     // Do nothing if the channel wasn't found on this server
@@ -55,6 +62,8 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('message', message => {
+
+    const botAvatar = client.user.avatarURL;
 
     //Prefix or Bot Author check
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -155,7 +164,7 @@ client.on('message', message => {
 
     //Run command
     try {
-        command.execute(message, args);
+        command.execute(message, args, botAvatar);
     }
     //Error if the command doesn't exist
     catch (error) {

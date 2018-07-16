@@ -11,7 +11,7 @@ module.exports = {
     usage: '<realm_name> <region>',
     guildOnly: false,
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, botAvatar) {
 
         const wowRealmStatusAPI = `https://${args[1]}.api.battle.net/wow/realm/status?locale=en_${args[1]}&apikey=${wowAPIKey}`
 
