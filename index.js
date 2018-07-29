@@ -1,4 +1,5 @@
 //Created by KryoUS using https://discord.js.org/ for the World of Warcraft guild Complexity of Thunderlord
+//This project will require a config.json that contains various API keys and the Discord Bot's Secret to function. The prefix variable also comes from config.json
 
 const fs = require('fs');
 const Discord = require('discord.js');
@@ -9,8 +10,6 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
 const cooldowns = new Discord.Collection();
-
-// const botAvatar = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fvigilant-quoram_profile.jpg?alt=media&token=5326e772-2e42-4d78-af8a-0fdd0d08c2d0`
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
@@ -63,6 +62,14 @@ client.on('guildMemberAdd', (member) => {
 
 client.on('message', message => {
 
+    console.log(message.author.username);
+    if (message.author.username == 'news-worldofwarcraft') {
+        console.log('Title: ', message.embeds[0].title);
+        console.log('Desc: ', message.embeds[0].description);
+        console.log('Link: ', message.embeds[0].url);
+        console.log('Image: ', message.embeds[0].image.url);
+    }
+
     const botAvatar = client.user.avatarURL;
 
     //Prefix or Bot Author check
@@ -97,28 +104,13 @@ client.on('message', message => {
     if (command.args && !args.length) {
 
         let argsMissingEmbed = new Discord.RichEmbed()
-            //.setColor('#ff1000')
-            //.setAuthor(`Current Weather`, weatherIcon)
             .setTitle(`Usage Error`)
-            //.setURL(<url>)
             .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
             .setThumbnail(botAvatar)
-            //.setImage(<image>)
-            //.setTimestamp()
-            //.setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
         if (command.usage) {
-            let argsMissingEmbed = new Discord.RichEmbed()
-                //.setColor('#ff1000')
-                //.setAuthor(`Current Weather`, weatherIcon)
-                .setTitle(`Usage Error`)
-                //.setURL(<url>)
-                .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
-                .setThumbnail(botAvatar)
-                .addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
-                //.setImage(<image>)
-                //.setTimestamp()
-                //.setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
+            argsMissingEmbed.setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
+            argsMissingEmbed.addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
         }
 
         return message.channel.send({ embed: argsMissingEmbed });
@@ -149,7 +141,7 @@ client.on('message', message => {
             const timeLeft = (expirationTime - now) / 1000;
 
             const cooldownEmbed = new Discord.RichEmbed()
-                .setDescription(`_"I am extremely busy and do not have the resources to process your request ${message.author}."_`)
+                .setDescription(`_"I am extremely busy and can't be bothered with you ${message.author}."_`)
                 .setThumbnail(botAvatar)
                 .addBlankField()
                 .addField(`Cooldown Remaining`, `Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${prefix}${command.name}\` command.`, false)
