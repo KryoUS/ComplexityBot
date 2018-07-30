@@ -3,7 +3,8 @@
 
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
+const massive = require('massive');
+const { prefix, token, postgresql } = require('./config.json');
 const snekfetch = require('snekfetch');
 
 const client = new Discord.Client();
@@ -62,12 +63,29 @@ client.on('guildMemberAdd', (member) => {
 
 client.on('message', message => {
 
-    console.log(message.author.username);
-    if (message.author.username == 'news-worldofwarcraft') {
-        console.log('Title: ', message.embeds[0].title);
-        console.log('Desc: ', message.embeds[0].description);
-        console.log('Link: ', message.embeds[0].url);
-        console.log('Image: ', message.embeds[0].image.url);
+    // news-worldofwarcraft
+    if (message.author.username == 'Wowhead News') {
+
+        massive({
+            host: postgresql.host,
+            port: postgresql.port,
+            database: postgresql.database,
+            user: postgresql.user,
+            password: postgresql.password,
+            ssl: true
+        }).then(db => {
+            db.news.insert({
+                title: message.embeds[0].title,
+                description: message.embeds[0].description,
+                link: message.embeds[0].url,
+                image: message.embeds[0].image.url
+            }).then(insertRes => {
+                console.log('News Inserted');
+            }).catch(insertErr => {
+                console.log('Massive Insert Error!');
+                console.log(insertErr);
+            });
+        });
     }
 
     const botAvatar = client.user.avatarURL;
