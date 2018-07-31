@@ -66,6 +66,7 @@ client.on('message', message => {
     // news-worldofwarcraft
     if (message.author.username == 'Wowhead News') {
         const now = new Date();
+        const dateTime = new Date().getTime();
         massive({
             host: postgresql.host,
             port: postgresql.port,
@@ -78,7 +79,8 @@ client.on('message', message => {
                 title: message.embeds[0].title,
                 description: message.embeds[0].description,
                 link: message.embeds[0].url,
-                image: message.embeds[0].image.url
+                image: message.embeds[0].image.url,
+                news_datetime: dateTime
             }).then(insertRes => {
                 console.log(`${now} (News Inserted)`);
             }).catch(insertErr => {
