@@ -80,7 +80,9 @@ client.on('message', message => {
                 description: message.embeds[0].description,
                 link: message.embeds[0].url,
                 image: message.embeds[0].image.url,
-                news_datetime: dateTime
+                news_datetime: dateTime,
+                category: 'worldofwarcraft',
+                source: 'wowhead'
             }).then(insertRes => {
                 console.log(`${now} (News Inserted)`);
             }).catch(insertErr => {
