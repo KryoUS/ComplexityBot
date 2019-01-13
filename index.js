@@ -3,8 +3,8 @@
 
 const fs = require('fs');
 const Discord = require('discord.js');
-const massive = require('massive');
-const { prefix, token, postgresql } = require('./config.json');
+const getDb = require('./db/db');
+const { prefix, token } = require('./config.json');
 const snekfetch = require('snekfetch');
 
 const client = new Discord.Client();
@@ -61,20 +61,22 @@ client.on('guildMemberAdd', (member) => {
     member.send({ embed: memWhisperEmbed });
 });
 
-client.on('message', message => {
+getDb().then(db => {
+    console.log('Database connected: ', db.listTables());
+  
+    // don't pass the instance
+    return Promise.resolve();
+  }).then(() => {
+    // retrieve the already-connected instance synchronously
+    const db = getDb();
 
-    // news-worldofwarcraft
-    if (message.author.username == 'Wowhead News') {
-        const now = new Date();
-        const dateTime = new Date().getTime();
-        massive({
-            host: postgresql.host,
-            port: postgresql.port,
-            database: postgresql.database,
-            user: postgresql.user,
-            password: postgresql.password,
-            ssl: true
-        }).then(db => {
+    client.on('message', message => {
+
+        // news-worldofwarcraft
+        if (message.author.username == 'Wowhead News') {
+            const now = new Date();
+            const dateTime = new Date().getTime();
+            
             db.news.insert({
                 title: message.embeds[0].title,
                 description: message.embeds[0].description,
@@ -89,105 +91,105 @@ client.on('message', message => {
                 console.log('Massive Insert Error!');
                 console.log(insertErr);
             });
-        });
-    }
+        }
 
-    const botAvatar = client.user.avatarURL;
+        const botAvatar = client.user.avatarURL;
 
-    //Prefix or Bot Author check
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+        //Prefix or Bot Author check
+        if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    //Split all arguments
-    const args = message.content.slice(prefix.length).split(/ +/);
-    //Convert all arguments to lowercase
-    const commandName = args.shift().toLowerCase();
+        //Split all arguments
+        const args = message.content.slice(prefix.length).split(/ +/);
+        //Convert all arguments to lowercase
+        const commandName = args.shift().toLowerCase();
 
-    //Find command or aliases
-    const command = client.commands.get(commandName)
-        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        //Find command or aliases
+        const command = client.commands.get(commandName)
+            || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-        //If no command or alias, bail?
-        if (!command) {
+            //If no command or alias, bail?
+            if (!command) {
+                const errorEmbed = new Discord.RichEmbed()
+                    .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
+                    .setThumbnail(botAvatar)
+                return message.channel.send({ embed: errorEmbed });
+            }
+
+        //Stop commands that are guildOnly and are DMed to the bot
+        if (command.guildOnly && message.channel.type !== 'text') {
+            const dMDeniedEmbed = new Discord.RichEmbed()
+                .setDescription(`_"This might be a difficult concept, however I cannot accept that command through Direct Messaging."_`)
+                .setThumbnail(botAvatar)
+            return message.reply({ embed: dMDeniedEmbed });
+        }
+
+        //Explain arguments if the command has one and one wasn't provided
+        if (command.args && !args.length) {
+
+            let argsMissingEmbed = new Discord.RichEmbed()
+                .setTitle(`Usage Error`)
+                .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
+                .setThumbnail(botAvatar)
+
+            if (command.usage) {
+                argsMissingEmbed.setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
+                argsMissingEmbed.addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
+            }
+
+            return message.channel.send({ embed: argsMissingEmbed });
+        }
+
+        //Check for cooldown on the command
+        if (!cooldowns.has(command.name)) {
+            cooldowns.set(command.name, new Discord.Collection());
+        }
+        
+        //Get the date and time
+        const now = Date.now();
+        const timestamps = cooldowns.get(command.name);
+        //Get the cooldown from the command or set a default of 3 seconds
+        const cooldownAmount = (command.cooldown || 3) * 1000;
+        
+        //Set a timestamp with the author and a timeout
+        if (!timestamps.has(message.author.id)) {
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+        else {
+            //Set the timestamp for when the user can ask the same command again
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+            //Finally check for expiration
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+
+                const cooldownEmbed = new Discord.RichEmbed()
+                    .setDescription(`_"I am extremely busy and can't be bothered with you ${message.author}."_`)
+                    .setThumbnail(botAvatar)
+                    .addBlankField()
+                    .addField(`Cooldown Remaining`, `Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${prefix}${command.name}\` command.`, false)
+
+                return message.channel.send({ embed: cooldownEmbed });
+            }
+
+            //Remove timeout
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        }
+
+        //Run command
+        try {
+            command.execute(message, args, botAvatar);
+        }
+        //Error if the command doesn't exist
+        catch (error) {
+            console.error(error);
             const errorEmbed = new Discord.RichEmbed()
                 .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
                 .setThumbnail(botAvatar)
-            return message.channel.send({ embed: errorEmbed });
+            message.channel.send({ embed: errorEmbed });
         }
-
-    //Stop commands that are guildOnly and are DMed to the bot
-    if (command.guildOnly && message.channel.type !== 'text') {
-        const dMDeniedEmbed = new Discord.RichEmbed()
-            .setDescription(`_"This might be a difficult concept, however I cannot accept that command through Direct Messaging."_`)
-            .setThumbnail(botAvatar)
-        return message.reply({ embed: dMDeniedEmbed });
-    }
-
-    //Explain arguments if the command has one and one wasn't provided
-    if (command.args && !args.length) {
-
-        let argsMissingEmbed = new Discord.RichEmbed()
-            .setTitle(`Usage Error`)
-            .setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
-            .setThumbnail(botAvatar)
-
-        if (command.usage) {
-            argsMissingEmbed.setDescription(`_"While I am able to process information at a rate that your primitive brain is unable to understand, I can only guess at what useless thing you were looking for ${message.author}. You'll need to provide an argument with more information."_`)
-            argsMissingEmbed.addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
-        }
-
-        return message.channel.send({ embed: argsMissingEmbed });
-    }
-
-    //Check for cooldown on the command
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
-    }
-    
-    //Get the date and time
-    const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    //Get the cooldown from the command or set a default of 3 seconds
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-    
-    //Set a timestamp with the author and a timeout
-    if (!timestamps.has(message.author.id)) {
-        timestamps.set(message.author.id, now);
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-    }
-    else {
-        //Set the timestamp for when the user can ask the same command again
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-        //Finally check for expiration
-        if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
-
-            const cooldownEmbed = new Discord.RichEmbed()
-                .setDescription(`_"I am extremely busy and can't be bothered with you ${message.author}."_`)
-                .setThumbnail(botAvatar)
-                .addBlankField()
-                .addField(`Cooldown Remaining`, `Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${prefix}${command.name}\` command.`, false)
-
-            return message.channel.send({ embed: cooldownEmbed });
-        }
-
-        //Remove timeout
-        timestamps.set(message.author.id, now);
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-    }
-
-    //Run command
-    try {
-        command.execute(message, args, botAvatar);
-    }
-    //Error if the command doesn't exist
-    catch (error) {
-        console.error(error);
-        const errorEmbed = new Discord.RichEmbed()
-            .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
-            .setThumbnail(botAvatar)
-        message.channel.send({ embed: errorEmbed });
-    }
+    });
 });
 
 //Log into Discord with Bot Token
