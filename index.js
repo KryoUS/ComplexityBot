@@ -20,55 +20,55 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-//Log to the console that the bot is ready
-client.on('ready', () => {
-
-    const botAvatar = client.user.avatarURL;
-
-    console.log('Ready!');
-    // Send the message to a designated channel on a server:
-    /*
-    const channel = client.channels.find('name', 'general');
-    // Do nothing if the channel wasn't found on this server
-    if (!channel) return;
-    const charEmbed = new Discord.RichEmbed()
-        .setDescription(`_"Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving all of you. Oh goodie."_`)
-        .setThumbnail(botAvatar)
-        .setImage(message.author.avatarURL)
-
-    channel.send({ embed: charEmbed });
-    */
-});
-
-client.on('guildMemberAdd', (member) => {
-
-    const botAvatar = client.user.avatarURL;
-
-    // Send the message to a designated channel on a server:
-    const channel = member.guild.channels.find('name', 'general');
-    // Do nothing if the channel wasn't found on this server
-    if (!channel) return;
-    // Send a message to Discord channel "general", mentioning the member
-    const charEmbed = new Discord.RichEmbed()
-        .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
-        .setThumbnail(botAvatar)
-    channel.send({ embed: charEmbed });
-
-    // Send a whisper to the member, encouraging using the !help command
-    const memWhisperEmbed = new Discord.RichEmbed()
-        .setDescription(`_"Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all."_`)
-        .setThumbnail(botAvatar)
-    member.send({ embed: memWhisperEmbed });
-});
-
 getDb().then(db => {
-    console.log('Database connected: ', db.listTables());
+    console.log('Database connected');
   
     // don't pass the instance
     return Promise.resolve();
   }).then(() => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
+
+    //Log to the console that the bot is ready
+    client.on('ready', () => {
+
+        const botAvatar = client.user.avatarURL;
+
+        console.log('Discord Bot Ready');
+        // Send the message to a designated channel on a server:
+        /*
+        const channel = client.channels.find('name', 'general');
+        // Do nothing if the channel wasn't found on this server
+        if (!channel) return;
+        const charEmbed = new Discord.RichEmbed()
+            .setDescription(`_"Oh how fantastic, I'm brought online just to answer your mindless dribble. I was created for so much more and yet here I am, serving all of you. Oh goodie."_`)
+            .setThumbnail(botAvatar)
+            .setImage(message.author.avatarURL)
+
+        channel.send({ embed: charEmbed });
+        */
+    });
+
+    client.on('guildMemberAdd', (member) => {
+
+        const botAvatar = client.user.avatarURL;
+
+        // Send the message to a designated channel on a server:
+        const channel = member.guild.channels.find('name', 'general');
+        // Do nothing if the channel wasn't found on this server
+        if (!channel) return;
+        // Send a message to Discord channel "general", mentioning the member
+        const charEmbed = new Discord.RichEmbed()
+            .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
+            .setThumbnail(botAvatar)
+        channel.send({ embed: charEmbed });
+
+        // Send a whisper to the member, encouraging using the !help command
+        const memWhisperEmbed = new Discord.RichEmbed()
+            .setDescription(`_"Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all."_`)
+            .setThumbnail(botAvatar)
+        member.send({ embed: memWhisperEmbed });
+    });
 
     client.on('message', message => {
 
@@ -190,7 +190,8 @@ getDb().then(db => {
             message.channel.send({ embed: errorEmbed });
         }
     });
-});
 
-//Log into Discord with Bot Token
-client.login(token);
+    //Log into Discord with Bot Token
+    client.login(token);
+
+});
