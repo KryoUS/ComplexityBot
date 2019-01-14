@@ -194,4 +194,7 @@ getDb().then(db => {
     //Log into Discord with Bot Token
     client.login(token);
 
+    //Show errors in console
+    client.on('error: ', console.error);
+
 });
