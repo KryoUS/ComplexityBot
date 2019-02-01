@@ -19,5 +19,7 @@ exports = module.exports = function () {
     db = instance;
 
     return Promise.resolve(db);
+  }).catch(error => {
+    console.log('Massive Error: ', error)
   });
 };

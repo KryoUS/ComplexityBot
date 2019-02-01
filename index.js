@@ -25,7 +25,7 @@ getDb().then(db => {
   
     // don't pass the instance
     return Promise.resolve();
-  }).then(() => {
+}).then(() => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
 
@@ -198,4 +198,6 @@ getDb().then(db => {
     //Show errors in console
     client.on('error', console.error);
 
+}).catch(error => {
+    console.log('DB Connection Error: ', error)
 });
