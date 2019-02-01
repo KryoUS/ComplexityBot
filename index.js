@@ -5,7 +5,6 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const getDb = require('./db/db');
 const { prefix, token } = require('./config.json');
-const snekfetch = require('snekfetch');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -21,7 +20,8 @@ for (const file of commandFiles) {
 }
 
 getDb().then(db => {
-    console.log('Database connected');
+    const now = new Date();
+    console.log(`${now} (Database connected)`);
   
     // don't pass the instance
     return Promise.resolve();
@@ -33,8 +33,9 @@ getDb().then(db => {
     client.on('ready', () => {
 
         const botAvatar = client.user.avatarURL;
+        const now = new Date();
 
-        console.log('Discord Bot Ready');
+        console.log(`${now} (Discord Bot Ready)`);
         // Send the message to a designated channel on a server:
         /*
         const channel = client.channels.find('name', 'general');
@@ -195,6 +196,6 @@ getDb().then(db => {
     client.login(token);
 
     //Show errors in console
-    client.on('error: ', console.error);
+    client.on('error', console.error);
 
 });

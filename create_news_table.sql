@@ -4,5 +4,7 @@ CREATE TABLE news (
     title TEXT,
     description TEXT,
     link TEXT,
-    image TEXT
+    image TEXT,
+    category VARCHAR(30),
+    source VARCHAR(30)
 );
