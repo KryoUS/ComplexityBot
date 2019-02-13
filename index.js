@@ -4,6 +4,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const getDb = require('./db/db');
+const axios = require('axios');
 const { prefix, token } = require('./config.json');
 
 const client = new Discord.Client();
@@ -73,11 +74,14 @@ getDb().then(db => {
 
     client.on('message', message => {
 
+        // Ignore the raidbots channel
+        if (message.channel.name === 'raidbots') {return}
+
         // news-worldofwarcraft
-        if (message.author.username == 'Wowhead News') {
-            const now = new Date();
+        if (message.author.username === 'Wowhead News') {
             const dateTime = new Date().getTime();
             
+            //Insert news
             db.news.insert({
                 title: message.embeds[0].title,
                 description: message.embeds[0].description,
@@ -87,13 +91,19 @@ getDb().then(db => {
                 category: 'worldofwarcraft',
                 source: 'wowhead'
             }).then(insertRes => {
-                console.log(`${now} (News Inserted)`);
+                console.log(`${new Date()} (News Inserted)`);
             }).catch(insertErr => {
                 console.log('Massive Insert Error!');
                 console.log(insertErr);
             });
         }
 
+        //Testing Raider.IO webhook
+        // if (message.author.username === 'Raider.IO') {
+        //     console.log(message.embeds);
+        // }
+
+        //Set the Bot Avatar for this function
         const botAvatar = client.user.avatarURL;
 
         //Prefix or Bot Author check
@@ -192,10 +202,36 @@ getDb().then(db => {
         }
     });
 
+    //Catches Message Edits, only used for Raidbots
+    client.on('messageUpdate', (oldMessage, newMessage) => {
+        
+        //Ensure the Author is the Raidbots Discord Bot & that there is an embed (The presence of the embed signifies that the simulation is done)
+        if (newMessage.author.username === 'Raidbots' && newMessage.embeds.length) {
+
+            //Get the report url from the content string
+            report = newMessage.content.substring(newMessage.content.indexOf('https:'));
+            reportURL = report.substring(0, report.indexOf('**') - 1);
+
+            //Get JSON data from Raidbots
+            axios.get(reportURL + '/data.json').then(res => {
+                
+                //Insert the Raidbots JSON into database
+                db.raidbots.saveDoc(res.data).then(result => {
+                    console.log(`${new Date()} (Raidbots Sim Inserted | ${result.simbot.title})`);
+                }).catch(error => {
+                    console.log(`${new Date()} Massive Raidbots JSON Insert Error = `, error);
+                })
+
+            }).catch(error => {
+                console.log('Raidbots API Error = ', error);
+            })
+        }
+    })
+
     //Log into Discord with Bot Token
     client.login(token);
 
-    //Show errors in console
+    //Show Discord.js library errors in console
     client.on('error', console.error);
 
 }).catch(error => {
