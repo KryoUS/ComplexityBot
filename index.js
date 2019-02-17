@@ -99,9 +99,39 @@ getDb().then(db => {
         }
 
         //Testing Raider.IO webhook
-        // if (message.author.username === 'Raider.IO') {
-        //     console.log(message.embeds);
-        // }
+        if (message.author.username === 'Raider.IO') {
+
+            if (message.embeds[0].fields.name.includes('Guild Run!')) {
+                let mythicGuildRun = {};
+                mythicGuildRun.dateTime = message.embeds[0].message.createdTimestamp;
+                mythicGuildRun.image = message.embeds[0].image ? message.embeds[0].image.url : null,
+                message.embeds[0].fields.map((obj, index) => {
+                    if (obj.name.includes('Guild Run!')) {
+                        mythicGuildRun.title = obj.name.replace('👊 ','');
+                        mythicGuildRun.description = obj.value;
+                    } else if (obj.value.includes('Group Details')) {
+                        mythicGuildRun.runUrl = obj.value.substring(obj.value.indexOf('Details]') + 10, obj.value.indexOf(' ● ') - 2);
+                        mythicGuildRun.dungeonUrl = obj.value.substring(obj.value.indexOf(' ● ') + 4, obj.value.lastIndexOf(' ● ') - 2);
+                        let affixes = obj.value.substring(obj.value.lastIndexOf(' ● ') + 4, obj.value.indexOf('](https://raider.io/mythic-plus-affix-rankings'));
+                        mythicGuildRun.affixes = affixes.split(', ');
+                        mythicGuildRun[`character${index}Spec`] = obj.name;
+                        mythicGuildRun[`character${index}Name`] = obj.value.substring(obj.value.indexOf('[') + 1, obj.value.indexOf(']') - 1);
+                        mythicGuildRun[`character${index}Score`] = obj.value.substring(obj.value.indexOf(' - ') + 3, obj.value.lastIndexOf('Score') - 1);
+                        mythicGuildRun[`character${index}URL`] = obj.value.substring(obj.value.indexOf('(') + 1, obj.value.indexOf(')') - 1);
+                    } else {
+                        mythicGuildRun[`character${index}Spec`] = obj.name;
+                        mythicGuildRun[`character${index}Name`] = obj.value.substring(obj.value.indexOf('[') + 1, obj.value.indexOf(']') - 1);
+                        mythicGuildRun[`character${index}Score`] = obj.value.substring(obj.value.indexOf(' - ') + 3, obj.value.lastIndexOf('Score') - 1);
+                        mythicGuildRun[`character${index}URL`] = obj.value.substring(obj.value.indexOf('(') + 1, obj.value.indexOf(')') - 1);
+                    }
+                })
+
+                console.log('Mythic Guild Run = ', mythicGuildRun);
+            } else {
+                console.log('Something = ', message.embeds[0].fields);
+            }
+            
+        }
 
         //Set the Bot Avatar for this function
         const botAvatar = client.user.avatarURL;

@@ -14,7 +14,7 @@ exports = module.exports = function () {
     database: postgresql.database,
     user: postgresql.user,
     password: postgresql.password,
-    ssl: false
+    ssl: true
 }).then(instance => {
     db = instance;
 
