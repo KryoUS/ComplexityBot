@@ -101,7 +101,7 @@ getDb().then(db => {
         //Testing Raider.IO webhook
         if (message.author.username === 'Raider.IO') {
 
-            if (message.embeds[0].fields.name && message.embeds[0].fields.name.includes('Guild Run!')) {
+            if (message.embeds[0].fields.name.includes('Guild Run!')) {
                 let mythicGuildRun = {};
                 mythicGuildRun.dateTime = message.embeds[0].message.createdTimestamp;
                 mythicGuildRun.image = message.embeds[0].image ? message.embeds[0].image.url : null,
