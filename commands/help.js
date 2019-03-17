@@ -1,5 +1,6 @@
 const { prefix } = require('../config.json');
 const Discord = require('discord.js');
+const DiscordBotLogging = require('../db/dbLogging');
 
 module.exports = {
     name: 'help',
@@ -8,7 +9,7 @@ module.exports = {
     aliases: ['commands'],
     usage: '<commandname>',
     cooldown: 5,
-    execute(message, args, botAvatar) {
+    execute(message, args, botAvatar, db) {
         const { commands } = message.client;
         const data = [];
 
@@ -53,6 +54,7 @@ module.exports = {
             if (command.usage) botEmbed.addField(`__**Usage:**__`, `${prefix}${command.name} ${command.usage}`);
         }
 
-        message.author.send({ embed: botEmbed })
+        message.author.send({ embed: botEmbed });
+        DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Help Command used.`);
     },
 };

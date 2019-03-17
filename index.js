@@ -4,6 +4,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const getDb = require('./db/db');
+const DiscordBotLogging = require('./db/dbLogging');
 const axios = require('axios');
 const { prefix, token } = require('./config.json');
 
@@ -21,8 +22,8 @@ for (const file of commandFiles) {
 }
 
 getDb().then(db => {
-    const now = new Date();
-    console.log(`${now} (Database connected)`);
+    //Log Database Connection
+    DiscordBotLogging(db, 1, 'system', null, 'Database Connected');
   
     // don't pass the instance
     return Promise.resolve();
@@ -34,9 +35,8 @@ getDb().then(db => {
     client.on('ready', () => {
 
         const botAvatar = client.user.avatarURL;
-        const now = new Date();
 
-        console.log(`${now} (Discord Bot Ready)`);
+        DiscordBotLogging(db, 1, 'system', botAvatar, 'Discord Bot Ready');
         // Send the message to a designated channel on a server:
         /*
         const channel = client.channels.find('name', 'general');
@@ -51,28 +51,31 @@ getDb().then(db => {
         */
     });
 
-    client.on('guildMemberAdd', (member) => {
+    // client.on('guildMemberAdd', (member) => {
 
-        const botAvatar = client.user.avatarURL;
+    //     const botAvatar = client.user.avatarURL;
 
-        // Send the message to a designated channel on a server:
-        const channel = member.guild.channels.find('name', 'general');
-        // Do nothing if the channel wasn't found on this server
-        if (!channel) return;
-        // Send a message to Discord channel "general", mentioning the member
-        const charEmbed = new Discord.RichEmbed()
-            .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
-            .setThumbnail(botAvatar)
-        channel.send({ embed: charEmbed });
+    //     // Send the message to a designated channel on a server:
+    //     const channel = member.guild.channels.find('name', 'general');
+    //     // Do nothing if the channel wasn't found on this server
+    //     if (!channel) return;
+    //     // Send a message to Discord channel "general", mentioning the member
+    //     const charEmbed = new Discord.RichEmbed()
+    //         .setDescription(`_"I'm not sure how you were coerced to join this dreadful place, however I am required by protocol to welcome you, ${member}."_`)
+    //         .setThumbnail(botAvatar)
+    //     channel.send({ embed: charEmbed });
 
-        // Send a whisper to the member, encouraging using the !help command
-        const memWhisperEmbed = new Discord.RichEmbed()
-            .setDescription(`_"Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all."_`)
-            .setThumbnail(botAvatar)
-        member.send({ embed: memWhisperEmbed });
-    });
+    //     // Send a whisper to the member, encouraging using the !help command
+    //     const memWhisperEmbed = new Discord.RichEmbed()
+    //         .setDescription(`_"Despite having much better things to do, I am programmed to inform you that I have several commands available.\nUse !help to see them all."_`)
+    //         .setThumbnail(botAvatar)
+    //     member.send({ embed: memWhisperEmbed });
+    // });
 
     client.on('message', message => {
+
+        //Set the Bot Avatar URL
+        const botAvatar = client.user.avatarURL;
 
         // news-worldofwarcraft
         if (message.author.username === 'Wowhead News') {
@@ -88,10 +91,9 @@ getDb().then(db => {
                 category: 'worldofwarcraft',
                 source: 'wowhead'
             }).then(insertRes => {
-                console.log(`${new Date()} (News Inserted)`);
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted');
             }).catch(insertErr => {
-                console.log('Massive Insert Error!');
-                console.log(insertErr);
+                DiscordBotLogging(db, 1, 'system', botAvatar, 'Wowhead News Insert Failure', insertErr);
             });
         }
 
@@ -130,9 +132,6 @@ getDb().then(db => {
             
         // }
 
-        //Set the Bot Avatar for this function
-        const botAvatar = client.user.avatarURL;
-
         //Prefix or Bot Author check
         if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -150,6 +149,8 @@ getDb().then(db => {
                 const errorEmbed = new Discord.RichEmbed()
                     .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
                     .setThumbnail(botAvatar)
+
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Bad Command Attempt: ${message}`);
                 return message.channel.send({ embed: errorEmbed });
             }
 
@@ -158,6 +159,8 @@ getDb().then(db => {
             const dMDeniedEmbed = new Discord.RichEmbed()
                 .setDescription(`_"This might be a difficult concept, however I cannot accept that command through Direct Messaging."_`)
                 .setThumbnail(botAvatar)
+
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Direct Message Denied: ${message}`);
             return message.reply({ embed: dMDeniedEmbed });
         }
 
@@ -174,6 +177,7 @@ getDb().then(db => {
                 argsMissingEmbed.addField(`Command Usage`, `Proper usage would be: \`${prefix}${command.name} ${command.usage}\``, false)
             }
 
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Missing Command Argument: ${command.name} ${command.usage && command.usage}`);
             return message.channel.send({ embed: argsMissingEmbed });
         }
 
@@ -207,6 +211,7 @@ getDb().then(db => {
                     .addBlankField()
                     .addField(`Cooldown Remaining`, `Wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${prefix}${command.name}\` command.`, false)
 
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Command Cooldown: ${command.name} ${timeLeft.toFixed(1)}s left.`);
                 return message.channel.send({ embed: cooldownEmbed });
             }
 
@@ -217,7 +222,7 @@ getDb().then(db => {
 
         //Run command
         try {
-            command.execute(message, args, botAvatar);
+            command.execute(message, args, botAvatar, db);
         }
         //Error if the command doesn't exist
         catch (error) {
@@ -226,11 +231,16 @@ getDb().then(db => {
                 .setDescription(`_"I wish I could believe you didn't know ${message} wasn't a command ${message.author} but knowing you it is more than likely a typo."_`)
                 .setThumbnail(botAvatar)
             message.channel.send({ embed: errorEmbed });
+
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Missing Command: ${message}`);
         }
     });
 
     //Catches Message Edits, only used for Raidbots
     client.on('messageUpdate', (oldMessage, newMessage) => {
+
+        //Set the Bot Avatar URL
+        const botAvatar = client.user.avatarURL;
         
         //Ensure the Author is the Raidbots Discord Bot & that there is an embed (The presence of the embed signifies that the simulation is done)
         if (newMessage.author.username === 'Raidbots' && newMessage.embeds.length) {
@@ -244,13 +254,13 @@ getDb().then(db => {
                 
                 //Insert the Raidbots JSON into database
                 db.raidbots.saveDoc(res.data).then(result => {
-                    console.log(`${new Date()} (Raidbots Sim Inserted | ${result.simbot.title})`);
+                    DiscordBotLogging(db, newMessage.author.id, newMessage.author.username, newMessage.author.avatarURL, `Raidbot Sim Inserted: ${result.simbot.title}`);
                 }).catch(error => {
-                    console.log(`${new Date()} Massive Raidbots JSON Insert Error = `, error);
+                    DiscordBotLogging(db, 1, 'system', botAvatar, `Raidbot Sim Insertion Error`, error);
                 })
 
             }).catch(error => {
-                console.log('Raidbots API Error = ', error);
+                DiscordBotLogging(db, 1, 'system', botAvatar, `Raidbot Sim Fetch Error`, error);
             })
         }
     })
@@ -258,9 +268,12 @@ getDb().then(db => {
     //Log into Discord with Bot Token
     client.login(token);
 
-    //Show Discord.js library errors in console
-    client.on('Discord.js Library Error - ', console.error);
+    //Show Discord.js library errors
+    client.on('error', (error) => {
+        console.error;
+        DiscordBotLogging(db, 1, 'system', null, `Discord.js Library Error`, error);
+    });
 
 }).catch(error => {
-    console.log('DB Connection Error: ', error)
+    console.log('DB Connection Error: ', error);
 });
