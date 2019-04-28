@@ -91,7 +91,7 @@ getDb().then(db => {
                 category: 'worldofwarcraft',
                 source: 'wowhead'
             }).then(insertRes => {
-                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted');
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted', message.embeds);
             }).catch(insertErr => {
                 DiscordBotLogging(db, 1, 'system', botAvatar, 'Wowhead News Insert Failure', insertErr);
             });
