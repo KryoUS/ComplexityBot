@@ -21,6 +21,20 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+//Function to remove Circular Object references
+const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+
 getDb().then(db => {
     //Log Database Connection
     DiscordBotLogging(db, 1, 'system', null, 'Database Connected');
@@ -80,7 +94,7 @@ getDb().then(db => {
         // news-worldofwarcraft
         if (message.author.username === 'Wowhead News') {
             const dateTime = new Date().getTime();
-            
+
             //Insert news
             db.news.insert({
                 title: message.embeds[0].title,
@@ -91,7 +105,7 @@ getDb().then(db => {
                 category: 'worldofwarcraft',
                 source: 'wowhead'
             }).then(insertRes => {
-                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted', message.embeds);
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted', JSON.stringify(message, getCircularReplacer()));
             }).catch(insertErr => {
                 DiscordBotLogging(db, 1, 'system', botAvatar, 'Wowhead News Insert Failure', insertErr);
             });
