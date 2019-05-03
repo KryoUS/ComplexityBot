@@ -112,7 +112,9 @@ getDb().then(db => {
         }
 
         //Testing Raider.IO webhook
-        // if (message.author.username === 'Raider.IO') {
+        if (message.author.username === 'Raider.IO') {
+
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'RaiderIO News Inserted', JSON.stringify(message, getCircularReplacer()));
 
         //     if (message.embeds[0].fields.name.includes('Guild Run!')) {
         //         let mythicGuildRun = {};
@@ -144,7 +146,7 @@ getDb().then(db => {
         //         console.log('Something = ', message.embeds[0].fields);
         //     }
             
-        // }
+        }
 
         //Prefix or Bot Author check
         if (!message.content.startsWith(prefix) || message.author.bot) return;
