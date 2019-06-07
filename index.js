@@ -21,20 +21,6 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-//Function to remove Circular Object references
-const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
-  };
-
 getDb().then(db => {
     //Log Database Connection
     DiscordBotLogging(db, 1, 'system', null, 'Database Connected');
@@ -105,7 +91,7 @@ getDb().then(db => {
                 category: 'worldofwarcraft',
                 source: 'wowhead'
             }).then(insertRes => {
-                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted', JSON.stringify(message, getCircularReplacer()));
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'Wowhead News Inserted', message);
             }).catch(insertErr => {
                 DiscordBotLogging(db, 1, 'system', botAvatar, 'Wowhead News Insert Failure', insertErr);
             });
@@ -114,7 +100,7 @@ getDb().then(db => {
         //Testing Raider.IO webhook
         if (message.author.username === 'Raider.IO') {
 
-            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'RaiderIO News Inserted', JSON.stringify(message, getCircularReplacer()));
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, 'RaiderIO News Inserted', message);
 
         //     if (message.embeds[0].fields.name.includes('Guild Run!')) {
         //         let mythicGuildRun = {};

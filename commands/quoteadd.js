@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const DiscordBotLogging = require('../db/dbLogging');
 
 module.exports = {
     name: 'quoteadd',
@@ -37,10 +38,13 @@ module.exports = {
                 .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
             message.reply({ embed: charEmbed });
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Quoteadd Command missing a quote.`, message);
             return
         }
 
         if (message.member.roles.find(x => x.name === allowedRoles)) {
+
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Quoteadd Command used.`);
 
             db.quotes.insert({
                 date_time: now,
@@ -62,6 +66,7 @@ module.exports = {
                     .setTimestamp()
                     .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Quote inserted.`, response);
                 message.channel.send({ embed: charEmbed });
             }).catch(error => {
                 console.log(message.authoer.username, error);
@@ -96,6 +101,8 @@ module.exports = {
                 //.setImage(<image>)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
+
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `User does not have sufficient privileges to use the Quoteadd command.`, message);
 
             message.reply({ embed: charEmbed });
         }
