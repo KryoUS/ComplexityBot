@@ -34,7 +34,7 @@ module.exports = {
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
-            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Random Quote given.`, response);
+            DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Random Quote given.`, {quote: quote, response: response});
 
             message.channel.send({ embed: charEmbed });
 
