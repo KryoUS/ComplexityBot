@@ -86,7 +86,7 @@ getDb().then(db => {
                 title: message.embeds[0].title,
                 description: message.embeds[0].description,
                 link: message.embeds[0].url,
-                image: message.embeds[0].image ? message.embeds[0].image.url : null,
+                image: message.embeds[0].thumbnail.url,
                 news_datetime: dateTime,
                 category: 'worldofwarcraft',
                 source: 'wowhead'
