@@ -35,7 +35,7 @@ getDb().then(db => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
 
-    cron.curfewCron(db, client);
+    //cron.curfewCron(db, client);
 
     //Log to the console that the bot is ready
     client.on('ready', () => {
@@ -79,6 +79,20 @@ getDb().then(db => {
     // });
 
     client.on('message', message => {
+
+        //Add the Thumbs Up and Thumbs Down reaction to all embeds or attachments
+        //Dev ID: 448988109015875586, Prod ID: 696197131542986782
+        if (message.channel.id == '696197131542986782') {
+
+            if (message.embeds.length > 0) {
+                message.react('👍');
+                message.react('👎');
+            }
+            if (message.attachments.size > 0) {
+                message.react('👍');
+                message.react('👎');
+            }
+        }
 
         //Set the Bot Avatar URL
         const botAvatar = client.user.avatarURL;
@@ -242,6 +256,7 @@ getDb().then(db => {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Missing Command: ${message}`);
         }
+
     });
 
     //Check for restricted users using Discord after curfew hours.
