@@ -17,7 +17,7 @@ module.exports = {
         
         //If the user that sent the message has the proper role
         const allowedRoles = "Guild Leaders"; //Prod Role: Guild Leaders
-        if (message.member.roles.find(x => x.name === allowedRoles)) {
+        if (message.member.roles.find(x => x.name === allowedRoles) || message.member.roles.find(x => x.name === "Moose Lord")) {
 
             //If there are no more than two arguments and it includes a colon as well as not including a hyphen
             if (args.length <= 2 && args[0].includes(":") && args[1].includes(":") && !args[0].includes("-") && !args[1].includes("-")) {
