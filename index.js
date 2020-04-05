@@ -7,6 +7,8 @@ const getDb = require('./db/db');
 const DiscordBotLogging = require('./db/dbLogging');
 const axios = require('axios');
 const { prefix, token } = require('./config.json');
+const curfew = require('./curfew/curfew');
+const cron = require('./cron/cron');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -21,6 +23,8 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+
+
 getDb().then(db => {
     //Log Database Connection
     DiscordBotLogging(db, 1, 'system', null, 'Database Connected');
@@ -30,6 +34,8 @@ getDb().then(db => {
 }).then(() => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
+
+    cron.curfewCron(db, client);
 
     //Log to the console that the bot is ready
     client.on('ready', () => {
@@ -236,6 +242,40 @@ getDb().then(db => {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Missing Command: ${message}`);
         }
+    });
+
+    //Check for restricted users using Discord after curfew hours.
+    //Triggers on users entering, leaving, muting, and unmuting Discord.
+    client.on('voiceStateUpdate', (oldMember, newMember) => {
+        let newUserChannel = newMember.voiceChannel;
+        let oldUserChannel = oldMember.voiceChannel;
+
+        //User joined a voice channel
+        if (oldUserChannel === undefined && newUserChannel !== undefined && newUserChannel.id == '127631752159035393') {
+            //Check for role
+            if (newMember._roles.find(roleID => roleID == '696104208088301752')) { //Prod Role: 696104208088301752, Dev Role: 449045945594806272
+                //Set a string of "##.##" for hour.minute timestamp format, based on Central TimeZone
+                let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() + "." + new Date().getMinutes();
+                now = Number(now);
+                //Get start and end curfew object from imported module
+                let startCurfewObj = curfew.getStartCurfew();
+                if (startCurfewObj.minutes < 10) {startCurfewObj.minutes = "0" + startCurfewObj.minutes}
+                let endCurfewObj = curfew.getEndCurfew();
+                if (endCurfewObj.minutes < 10) {endCurfewObj.minutes = "0" + endCurfewObj.minutes}
+                //Set curfew strings with "##.##" for hour.minute timestamp format
+                let startCurfew = startCurfewObj.hour + "." + startCurfewObj.minutes;
+                startCurfew = Number(startCurfew);
+                let endCurfew = endCurfewObj.hour + "." + endCurfewObj.minutes;
+                endCurfew = Number(endCurfew);
+                
+                //If now is after the starting curfew and now is before midnight OR now is greater than midnight and now is before the end of the curfew
+                if ((now > startCurfew && now < 23.59) || (now > 0.00 && now < endCurfew)) {
+                    newMember.setVoiceChannel(null);
+                    newMember.send(`You have been disconnected from voice chat due to the current time being outside of curfew hours. Current curfew is set between the hours of ${startCurfew} and ${endCurfew}.`)
+                    DiscordBotLogging(db, newMember.user.id, newMember.user.username, newMember.user.avatarURL, `${newMember.user.username} was disconnected due to curfew. ${now} vs ${startCurfew} and ${endCurfew}`);
+                }
+            };
+        };
     });
 
     //Catches Message Edits, only used for Raidbots
