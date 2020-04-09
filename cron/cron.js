@@ -6,20 +6,16 @@ module.exports = {
     
     curfewCron: (db, client) => new CronJob('*/10 * * * * *', () => {
         
-        //Set a string of "##.##" for hour.minute timestamp format based on Central TimeZone
-        let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() + "." + new Date().getMinutes();
+        //Set an integer as "####" (HRMN) timestamp format, based on Central TimeZone
+        let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() * 100 + new Date().getMinutes();
         now = Number(now);
-        //Get start and end curfew object from imported module
-        let startCurfewObj = curfew.getStartCurfew();
-        let endCurfewObj = curfew.getEndCurfew();
-        //Set curfew strings with "##.##" for hour.minute timestamp format
-        let startCurfew = startCurfewObj.hour + "." + startCurfewObj.minutes;
-        startCurfew = Number(startCurfew);
-        let endCurfew = endCurfewObj.hour + "." + endCurfewObj.minutes;
-        endCurfew = Number(endCurfew);
+
+        //Set curfew integers with "####" for HRMN timestamp format
+        let startCurfew = curfew.getCurfew().start;
+        let endCurfew = curfew.getCurfew().end;
 
         //If now is after the starting curfew and now is before midnight OR now is greater than midnight and now is before the end of the curfew
-        if ((now > startCurfew && now < 23.59) || (now > 0.00 && now < endCurfew)) {
+        if ((now > startCurfew && now < 2359) || (now > 0 && now < endCurfew)) {
 
             //Get all Members that belong to the restricted role
             //Prod Guild: 127631752159035392 , Prod Role: 696104208088301752

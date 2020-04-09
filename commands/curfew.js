@@ -14,19 +14,14 @@ module.exports = {
         const clockThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fdigital_clock_icon.png?alt=media&token=56ff341c-a89c-4ab6-baec-178372e33811`
         const errorThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Ferror.png?alt=media&token=19beee91-6acd-4949-87da-dc2949e68fa1`
 
-        let startCurfewObj = curfew.getStartCurfew();
-        let endCurfewObj = curfew.getEndCurfew();
-        
-        //For display purposes, but a zero before minutes that are under ten.
-        if (startCurfewObj.minutes < 10) {startCurfewObj.minutes = "0" + startCurfewObj.minutes};
-        if (endCurfewObj.minutes < 10) {endCurfewObj.minutes = "0" + endCurfewObj.minutes};
+        let curfewObj = curfew.getCurfew();        
 
         const curfewEmbed = new Discord.RichEmbed()
             .setColor('#45f542')
             .setTitle(`Show Curfew`)
             //.setURL(<url>)
             .setAuthor(`Curfew`, botAvatar)
-            .setDescription(`Curfew hours are currently set to ${startCurfewObj.hour}:${startCurfewObj.minutes} and ${endCurfewObj.hour}:${endCurfewObj.minutes}.`)
+            .setDescription(`Curfew hours are currently set to ${curfewObj.start} and ${curfewObj.end}.`)
             .addBlankField()
             .setThumbnail(clockThumb)
             //.addField(`test`, `test`, false)
@@ -34,7 +29,7 @@ module.exports = {
             .setTimestamp()
             .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
-        DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Curfew time requested. Currently between ${startCurfewObj.hour}:${startCurfewObj.minutes} and ${endCurfewObj.hour}:${endCurfewObj.minutes}.`);
+        DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Curfew time requested. Currently between ${curfewObj.start} and ${curfewObj.end}.`);
 
         message.channel.send({ embed: curfewEmbed });
     },

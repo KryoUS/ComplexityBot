@@ -2,40 +2,44 @@ const Discord = require('discord.js');
 const DiscordBotLogging = require('../db/dbLogging');
 const curfew = require('../curfew/curfew');
 
+const removeSymbols = (num) => {
+    return num.replace(/\D/g);
+}
+
 module.exports = {
     name: 'setcurfew',
     aliases: [],
     description: `Sets the curfew hours for users with a specific Discord Role.`,
     category: `Guild`,
     args: true,
-    usage: '<20:00> <5:00>',
+    usage: '<2000> <500>',
     guildOnly: false,
     cooldown: 5,
     async execute(message, args, botAvatar, db) {
         const clockThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fdigital_clock_icon.png?alt=media&token=56ff341c-a89c-4ab6-baec-178372e33811`
         const errorThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Ferror.png?alt=media&token=19beee91-6acd-4949-87da-dc2949e68fa1`
-        
+
         //If the user that sent the message has the proper role
         const allowedRoles = "Guild Leaders"; //Prod Role: Guild Leaders
         if (message.member.roles.find(x => x.name === allowedRoles) || message.member.roles.find(x => x.name === "Moose Lord")) {
 
-            //If there are no more than two arguments and it includes a colon as well as not including a hyphen
-            if (args.length <= 2 && args[0].includes(":") && args[1].includes(":") && !args[0].includes("-") && !args[1].includes("-")) {
-
+            //If there are no more or less than two arguments
+            if (args.length = 2) {
+                    
+                //Set as an integer
+                let startCurfew = Number(removeSymbols(args[0]));
+                let endCurfew = Number(removeSymbols(args[1]));
+                
                 //Set the starting and ending curfew
-                curfew.setStartCurfew(args[0]);
-                curfew.setEndCurfew(args[1]);
+                curfew.setStartCurfew(startCurfew);
+                curfew.setEndCurfew(endCurfew);
 
-                //Get now and set the format to "##.##" based on Central Time Zone
-                let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() + "." + new Date().getMinutes();
+                //Set an integer as "####" (HRMN) timestamp format, based on Central TimeZone
+                let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() * 100 + new Date().getMinutes();
                 now = Number(now);
 
-                //Define the new starting and ending curfew times, and set the format to "##.##"
-                let startCurfew = Number(args[0].replace(":", "."));
-                let endCurfew = Number(args[1].replace(":", "."));
-
                 //If now is after the starting curfew and now is before midnight OR now is greater than midnight and now is before the end of the curfew
-                if ((now > startCurfew && now < 23.59) || (now > 0.00 && now < endCurfew)) {
+                if ((now > startCurfew && now < 2359) || (now > 0 && now < endCurfew)) {
 
                     //Get all Members that belong to the restricted role
                     //Prod Role: 696104208088301752, Dev Role: 449045945594806272
@@ -56,7 +60,7 @@ module.exports = {
                     .setTitle(`Set Curfew`)
                     //.setURL(<url>)
                     .setAuthor(`Curfew`, botAvatar)
-                    .setDescription(`Curfew hours updated to be between ${args[0]} and ${args[1]}.`)
+                    .setDescription(`Curfew hours updated to be between ${startCurfew} and ${endCurfew}.`)
                     .addBlankField()
                     .setThumbnail(clockThumb)
                     //.addField(`test`, `test`, false)
@@ -64,7 +68,7 @@ module.exports = {
                     .setTimestamp()
                     .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL);
 
-                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Curfew time modified to be between ${args[0]} and ${args[1]}.`);
+                DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Curfew time modified to be between ${startCurfew} and ${endCurfew}.`);
 
                 message.channel.send({ embed: curfewEmbed });
 
@@ -74,7 +78,7 @@ module.exports = {
                     .setTitle(`Error`)
                     //.setURL(<url>)
                     .setAuthor(`Curfew`, botAvatar)
-                    .setDescription(`Incorrect format! The proper format is... \n ^setcurfew 22:00 5:00`)
+                    .setDescription(`Incorrect format! The proper format is... \n ^setcurfew 2200 500`)
                     .addBlankField()
                     .setThumbnail(errorThumb)
                     //.addField(`test`, `test`, false)
