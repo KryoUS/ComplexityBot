@@ -3,7 +3,7 @@ const DiscordBotLogging = require('../db/dbLogging');
 const curfew = require('../curfew/curfew');
 
 const removeSymbols = (num) => {
-    return num.replace(/\D/g);
+    return num.replace(/\D/g, '');
 }
 
 module.exports = {
