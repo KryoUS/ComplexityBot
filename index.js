@@ -109,7 +109,7 @@ getDb().then(db => {
     });
     //Set Role based on Reaction Emoji
     client.on('messageReactionAdd', (reaction, user) => {
-        if (reaction.message.channel.id === config.dev === true ? '767216889348751361' : '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
+        if (reaction.message.channel.id === '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
             for (let o in emojiname)
             if (reaction.emoji.name == emojiname[o]) {
                 let roleObj = reaction.message.guild.roles.find(e => e.name == rolename[o]);
@@ -121,7 +121,7 @@ getDb().then(db => {
     });
     //Remove Role based on Reaction Emoji
     client.on('messageReactionRemove', (reaction, user) => {
-        if (reaction.message.channel.id === config.dev === true ? '767216889348751361' : '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
+        if (reaction.message.channel.id === '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
             for (let o in emojiname)
                 if (reaction.emoji.name == emojiname[o]) {
                     let roleObj = reaction.message.guild.roles.find(e => e.name == rolename[o]);
@@ -136,7 +136,7 @@ getDb().then(db => {
 
         //Add the Thumbs Up and Thumbs Down reaction to all embeds or attachments
         //Dev ID: 448988109015875586, Prod ID: 696197131542986782
-        if (message.channel.id === config.dev === true ? '448988109015875586' : '696197131542986782') {
+        if (message.channel.id === '696197131542986782') {
 
             if (message.embeds.length > 0) {
                 message.react('👍');
@@ -322,7 +322,7 @@ getDb().then(db => {
         //User joined a voice channel
         if (oldUserChannel === undefined && newUserChannel !== undefined && newUserChannel.id == '127631752159035393' ) {
             //Check for role
-            if (newMember._roles.find(roleID => roleID === config.dev === true ? '449045945594806272' : '696104208088301752')) { //Prod Role: 696104208088301752, Dev Role: 449045945594806272
+            if (newMember._roles.find(roleID => roleID === '696104208088301752')) { //Prod Role: 696104208088301752, Dev Role: 449045945594806272
                 
                 //Set an integer as "####" (HRMN) timestamp format, based on Central TimeZone
                 let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() * 100 + new Date().getMinutes();
