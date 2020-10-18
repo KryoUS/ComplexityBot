@@ -141,7 +141,8 @@ getDb().then(db => {
             if (message.embeds.length > 0) {
                 message.react('👍');
                 message.react('👎');
-            } else if (message.attachments.size > 0) {
+            }
+            if (message.attachments.size > 0) {
                 message.react('👍');
                 message.react('👎');
             }
