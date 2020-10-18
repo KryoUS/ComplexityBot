@@ -1,4 +1,5 @@
 //Discord Bot Logging
+const config = require('../config.json');
 
 //Function to remove Circular Object references
 const getCircularReplacer = () => {
@@ -20,7 +21,7 @@ module.exports = (db, userid, username, useravatarURL, message, errorJSON) => {
         userid: userid,
         username: username,
         useravatarurl: useravatarURL,
-        message: message,
+        message: config.dev === true ? `DevEnviro: ${message}` :  message,
         error: errorJSON ? JSON.stringify(errorJSON, getCircularReplacer()) : '{}'
     }).then(result => {
         //Do nothing with results
