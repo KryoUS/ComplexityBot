@@ -1,5 +1,6 @@
 const massive = require('massive');
 const { postgresql } = require('../config.json');
+const config = require('../config.json');
 
 let db;
 
@@ -14,7 +15,7 @@ exports = module.exports = function () {
     database: postgresql.database,
     user: postgresql.user,
     password: postgresql.password,
-    ssl: true
+    ssl: config.dev === true ? {rejectUnauthorized: false} : true
 }).then(instance => {
     db = instance;
 
