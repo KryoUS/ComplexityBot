@@ -7,6 +7,7 @@ const getDb = require('./db/db');
 const DiscordBotLogging = require('./db/dbLogging');
 const axios = require('axios');
 const { prefix, token } = require('./config.json');
+const config = require('./config.json');
 const curfew = require('./curfew/curfew');
 const cron = require('./cron/cron');
 
@@ -23,7 +24,9 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-
+//Define Emojis to set Roles
+let emojiname = ["rbg", "arena", "mythicplus"],
+    rolename = ["RBG", "Arena", "Mythic+"];
 
 getDb().then(db => {
     //Log Database Connection
@@ -35,7 +38,7 @@ getDb().then(db => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
 
-    // cron.curfewCron(db, client);
+    cron.curfewCron(db, client);
 
     //Log to the console that the bot is ready
     client.on('ready', () => {
@@ -78,11 +81,62 @@ getDb().then(db => {
     //     member.send({ embed: memWhisperEmbed });
     // });
 
+    /* Reaction Roles by Emoji */
+    //Emit messageReactionAdd and messageReactionRemove
+    client.on('raw', packet => {
+        // We don't want this to run on unrelated packets
+        if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
+        // Grab the channel to check the message from
+        const channel = client.channels.get(packet.d.channel_id);
+        // There's no need to emit if the message is cached, because the event will fire anyway for that
+        if (channel.messages.has(packet.d.message_id)) return;
+        // Since we have confirmed the message is not cached, let's fetch it
+        channel.fetchMessage(packet.d.message_id).then(message => {
+            // Emojis can have identifiers of name:id format, so we have to account for that case as well
+            const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
+            // This gives us the reaction we need to emit the event properly, in top of the message object
+            const reaction = message.reactions.get(emoji);
+            // Adds the currently reacting user to the reaction's users collection.
+            if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
+            // Check which type of event it is before emitting
+            if (packet.t === 'MESSAGE_REACTION_ADD') {
+                client.emit('messageReactionAdd', reaction, client.users.get(packet.d.user_id));
+            }
+            if (packet.t === 'MESSAGE_REACTION_REMOVE') {
+                client.emit('messageReactionRemove', reaction, client.users.get(packet.d.user_id));
+            }
+        });
+    });
+    //Set Role based on Reaction Emoji
+    client.on('messageReactionAdd', (reaction, user) => {
+        if (reaction.message.channel.id === config.dev === true ? '767216889348751361' : '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
+            for (let o in emojiname)
+            if (reaction.emoji.name == emojiname[o]) {
+                let roleObj = reaction.message.guild.roles.find(e => e.name == rolename[o]);
+                reaction.message.guild.member(user).addRole(roleObj).catch(console.error);
+                
+                DiscordBotLogging(db, user.id, user.username, user.avatarURL, `Role ${roleObj.name} set using ${reaction.emoji.name} emoji`, reaction);
+            }
+        }
+    });
+    //Remove Role based on Reaction Emoji
+    client.on('messageReactionRemove', (reaction, user) => {
+        if (reaction.message.channel.id === config.dev === true ? '767216889348751361' : '767214357947088896') { //Dev: 767216889348751361, Prod: 767214357947088896
+            for (let o in emojiname)
+                if (reaction.emoji.name == emojiname[o]) {
+                    let roleObj = reaction.message.guild.roles.find(e => e.name == rolename[o]);
+                    reaction.message.guild.member(user).removeRole(roleObj).catch(console.error);
+                    
+                    DiscordBotLogging(db, user.id, user.username, user.avatarURL, `Role ${roleObj.name} removed from user using ${reaction.emoji.name} emoji`, reaction);
+                }
+        }
+    });
+
     client.on('message', message => {
 
         //Add the Thumbs Up and Thumbs Down reaction to all embeds or attachments
         //Dev ID: 448988109015875586, Prod ID: 696197131542986782
-        if (message.channel.id == '696197131542986782') {
+        if (message.channel.id === config.dev === true ? '448988109015875586' : '696197131542986782') {
 
             if (message.embeds.length > 0) {
                 message.react('👍');
@@ -91,7 +145,7 @@ getDb().then(db => {
                 message.react('👍');
                 message.react('👎');
             }
-            
+
         }
 
         //Set the Bot Avatar URL
@@ -268,7 +322,7 @@ getDb().then(db => {
         //User joined a voice channel
         if (oldUserChannel === undefined && newUserChannel !== undefined && newUserChannel.id == '127631752159035393' ) {
             //Check for role
-            if (newMember._roles.find(roleID => roleID == '696104208088301752')) { //Prod Role: 696104208088301752, Dev Role: 449045945594806272
+            if (newMember._roles.find(roleID => roleID === config.dev === true ? '449045945594806272' : '696104208088301752')) { //Prod Role: 696104208088301752, Dev Role: 449045945594806272
                 
                 //Set an integer as "####" (HRMN) timestamp format, based on Central TimeZone
                 let now = new Date(Date.parse(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}))).getHours() * 100 + new Date().getMinutes();
