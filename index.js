@@ -9,7 +9,7 @@ const axios = require('axios');
 const { prefix, token } = require('./config.json');
 const config = require('./config.json');
 const curfew = require('./curfew/curfew');
-const cron = require('./cron/cron');
+// const cron = require('./cron/cron');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -38,7 +38,7 @@ getDb().then(db => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
 
-    cron.curfewCron(db, client);
+    // cron.curfewCron(db, client);
 
     //Log to the console that the bot is ready
     client.on('ready', () => {
