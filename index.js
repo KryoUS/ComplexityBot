@@ -35,7 +35,7 @@ getDb().then(db => {
     // retrieve the already-connected instance synchronously
     const db = getDb();
 
-    cron.curfewCron(db, client);
+    // cron.curfewCron(db, client);
 
     //Log to the console that the bot is ready
     client.on('ready', () => {
@@ -87,11 +87,11 @@ getDb().then(db => {
             if (message.embeds.length > 0) {
                 message.react('👍');
                 message.react('👎');
-            }
-            if (message.attachments.size > 0) {
+            } else if (message.attachments.size > 0) {
                 message.react('👍');
                 message.react('👎');
             }
+            
         }
 
         //Set the Bot Avatar URL
