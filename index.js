@@ -138,6 +138,12 @@ getDb().then(db => {
 
     client.on('message', message => {
 
+        //Ignore the raidboats Channel
+        //Prod ID: 533046937704726555
+        if (message.channel.id === '533046937704726555') {
+            return;
+        }
+
         //Add the Thumbs Up and Thumbs Down reaction to all embeds or attachments
         //Dev ID: 448988109015875586, Prod ID: 696197131542986782
         if (message.channel.id === '696197131542986782') {
