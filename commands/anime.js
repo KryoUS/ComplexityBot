@@ -50,7 +50,7 @@ module.exports = {
 
                     const charEmbed = new Discord.RichEmbed()
                         .setColor('#ffffff')
-                        .setTitle(`${anime.attributes.titles.en} [${anime.attributes.titles.ja_jp}]`)
+                        .setTitle(`${anime.attributes.titles.en ?? anime.attributes.titles.en_jp} [${anime.attributes.titles.ja_jp}]`)
                         .setURL(anime.links.self.replace('/api/edge', ''))
                         .setAuthor(`Anime`, botAvatar)
                         .setDescription(anime.attributes.description)
