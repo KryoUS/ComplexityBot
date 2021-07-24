@@ -17,13 +17,13 @@ module.exports = {
         const discordThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1627093582/discord/twitch.png`;
         const errorThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1570496619/discord/error.png`;
 
-        const allowedRoles = "Guild Officers";
+        const allowedRoles = "RoleTest";
 
         if (message.member.roles.find(x => x.name === allowedRoles)) {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Streamer List Command used.`);
 
-            axios.get(`https://www.complexityguild.net/api/twitch/webhooks/list`, {
+            axios.get(`http://nodejs:3050/api/twitch/webhooks/list`, {
                 headers: {
                     "Discord-Bot-Id": config.discordBotID,
                     "Content-Type": "application/json"
