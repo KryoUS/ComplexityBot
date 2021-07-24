@@ -72,7 +72,7 @@ module.exports = {
                 const charEmbed = new Discord.RichEmbed()
                 .setColor('#ffffff')
                 .setAuthor(`ComplexityBot`, botAvatar)
-                .setTitle(`Streamer Add Error`)
+                .setTitle(`Streamer Remove Error`)
                 .setDescription(`Something went wrong. Ensure that the ID is correct from the "!streamerlist" command. It is also possible that the Twitch API encountered an error and you should try again in a few minutes.`)
                 .setThumbnail(errorThumb)
                 .setTimestamp()
