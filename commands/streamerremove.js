@@ -10,7 +10,7 @@ module.exports = {
     category: `Twitch`,
     args: true,
     usage: '<streamerremove GUID>',
-    guildOnly: false,
+    guildOnly: true,
     cooldown: 10,
     async execute(message, args, botAvatar, db) {
 
