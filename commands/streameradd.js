@@ -44,7 +44,7 @@ module.exports = {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Streamer Add Command used.`);
 
-            axios.put(`http://nodejs:3050/api/twitch/streamer/golive/${twitchChannel}`, {}, {
+            axios.put(`nodejs:3050/api/twitch/streamer/golive/${twitchChannel}`, {}, {
                 headers: {
                     "Discord-Bot-Id": config.discordBotID,
                     "Content-Type": "application/json"
