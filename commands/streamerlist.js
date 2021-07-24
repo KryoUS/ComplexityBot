@@ -17,7 +17,7 @@ module.exports = {
         const discordThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1627093582/discord/twitch.png`;
         const errorThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1570496619/discord/error.png`;
 
-        const allowedRoles = "RoleTest";
+        const allowedRoles = "Guild Officers";
 
         if (message.member.roles.find(x => x.name === allowedRoles)) {
 
