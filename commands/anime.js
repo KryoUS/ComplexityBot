@@ -15,7 +15,7 @@ module.exports = {
 
         if (message.channel.id == 821512182826532864) {
             const animeThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1605845267/discord/kitsu.png`;
-            const errorThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Ferror.png?alt=media&token=19beee91-6acd-4949-87da-dc2949e68fa1`;
+            const errorThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1570496619/discord/error.png`;
 
             const allowedRoles = "Guild Member";
             let argJoin = args.join(' ');

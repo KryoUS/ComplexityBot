@@ -13,7 +13,7 @@ module.exports = {
     async execute(message, args, botAvatar, db) {
         
         const quoteThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Fquotes.png?alt=media&token=357efdeb-b65d-4544-8e9d-14d66c5fc5b6`;
-        const errorThumb = `https://firebasestorage.googleapis.com/v0/b/complexitywebsite-bdcf7.appspot.com/o/DiscordBot%2Ferror.png?alt=media&token=19beee91-6acd-4949-87da-dc2949e68fa1`;
+        const errorThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1570496619/discord/error.png`;
 
         const allowedRoles = "Guild Member";
 
