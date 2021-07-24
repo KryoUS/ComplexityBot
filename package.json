@@ -11,11 +11,11 @@
   "author": "Michael Hughes",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cron": "^1.8.2",
     "discord.js": "^11.6.4",
     "eslint": "^5.16.0",
-    "massive": "^6.6.0"
+    "massive": "^6.10.0"
   },
   "repository": {
     "type": "git",
