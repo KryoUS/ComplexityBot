@@ -17,7 +17,7 @@ module.exports = {
         const discordThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1627093582/discord/twitch.png`;
         const errorThumb = `https://res.cloudinary.com/complexityguild/image/upload/v1570496619/discord/error.png`;
 
-        const allowedRoles = "RoleTest";
+        const allowedRoles = "Guild Officers";
 
         if (message.member.roles.find(x => x.name === allowedRoles)) {
 
@@ -33,9 +33,8 @@ module.exports = {
                 const charEmbed = new Discord.RichEmbed()
                     .setColor('#6441A4')
                     .setTitle(`Complexity Streamers`)
-                    .setURL(`https://discord.com/channels/127631752159035392/860360720100622376`)
                     .setAuthor(`ComplexityBot`, botAvatar)
-                    .setDescription(`When the following streamers go live, the ComplexityBot will post in the #streamer-go-live channel. To remove a streamer, copy the remove command listed below the Channel Name and paste it into Discord.`)
+                    .setDescription(`When the following streamers go live, the ComplexityBot will post in the [#streamer-go-live](https://discord.com/channels/127631752159035392/860360720100622376) channel. To remove a streamer, copy the remove command listed below the Channel Name and paste it into Discord.`)
                     .addBlankField()
                     .setThumbnail(discordThumb)
                     // .addField('Field 1 Title', 'Field 1 Text', true)
