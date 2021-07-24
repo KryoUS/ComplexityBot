@@ -17,7 +17,8 @@ exports = module.exports = function () {
     password: postgresql.password,
     ssl: {
       rejectUnauthorized: false
-    }
+    },
+    poolsize: 25,
 }).then(instance => {
     db = instance;
 
