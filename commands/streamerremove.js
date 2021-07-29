@@ -44,7 +44,7 @@ module.exports = {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Streamer Remove Command used.`);
 
-            axios.delete(`https://complexityguild.net/api/twitch/streamer/removeid/${twitchGUID}`, {
+            axios.delete(`localhost:3050/api/twitch/streamer/removeid/${twitchGUID}`, {
                 headers: {
                     "Discord-Bot-Id": config.discordBotID,
                     "Content-Type": "application/json"

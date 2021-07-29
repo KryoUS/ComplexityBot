@@ -23,7 +23,7 @@ module.exports = {
 
             DiscordBotLogging(db, message.author.id, message.author.username, message.author.avatarURL, `Streamer List Command used.`);
 
-            axios.get(`https://complexityguild.net/api/twitch/webhooks/list`, {
+            axios.get(`localhost:3050/api/twitch/webhooks/list`, {
                 headers: {
                     "Discord-Bot-Id": config.discordBotID,
                     "Content-Type": "application/json"
