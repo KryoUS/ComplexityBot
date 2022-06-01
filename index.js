@@ -163,8 +163,7 @@ getDb().then(db => {
         const botAvatar = client.user.avatarURL;
 
         // news-worldofwarcraft
-        console.log(message.channel.name === 'wowhead');
-        if (message.channel.id === '469628011826905138') {
+        if (message.channel.name === 'wowhead') {
             const dateTime = new Date().getTime();
 
             //Insert news
